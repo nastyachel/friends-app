@@ -19,6 +19,9 @@
         <spring.version>4.2.0.RELEASE</spring.version>
         <jstl.version>1.2</jstl.version>
         <jackson.version>2.5.0</jackson.version>
+        <org.hibernate-em-version>4.3.8.Final</org.hibernate-em-version>
+        <org.springframework.data-version>1.10.2.RELEASE</org.springframework.data-version>
+        <dbh2.version>1.4.192</dbh2.version>
     </properties>
 
     <dependencyManagement>
@@ -69,15 +72,36 @@
                 <artifactId>jackson-databind</artifactId>
                 <version>${jackson.version}</version>
             </dependency>
+
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-core</artifactId>
                 <version>${jackson.version}</version>
             </dependency>
+
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-annotations</artifactId>
                 <version>${jackson.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework.data</groupId>
+                <artifactId>spring-data-jpa</artifactId>
+                <version>${org.springframework.data-version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.hibernate</groupId>
+                <artifactId>hibernate-entitymanager</artifactId>
+                <version>${org.hibernate-em-version}</version>
+            </dependency>
+
+            <!-- H2 DB -->
+            <dependency>
+                <groupId>com.h2database</groupId>
+                <artifactId>h2</artifactId>
+                <version>${dbh2.version}</version>
             </dependency>
 
         </dependencies>
