@@ -1,6 +1,8 @@
 package com.cheliadina.controller;
 
+import com.cheliadina.domain.Message;
 import com.cheliadina.domain.User;
+import com.cheliadina.repositories.MessageRepository;
 import com.cheliadina.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,24 +21,28 @@ public class HomeController {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private MessageRepository messageRepository;
+
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public ModelAndView printHello(ModelMap model) {
-        User user = new User();
-        user.setName("Petya");
-        userRepository.save(user);
+        User user1 = new User();
+        user1.setFirstName("Petya");
+        userRepository.save(user1);
 
-        user = new User();
-        user.setName("Vasya");
-        userRepository.save(user);
+        User user2 = new User();
+        user2.setFirstName("Vasya");
+        userRepository.save(user2);
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("index");
         StringBuilder msgBuilder = new StringBuilder("have: ");
-        for (User u : userRepository.findAll())
-        {
-            msgBuilder.append(u.getName() + " ");
+        for (User u : userRepository.findAll()) {
+            msgBuilder.append(u.getFirstName() + " ");
         }
+
         modelAndView.addObject("msg", msgBuilder.toString());
+
         return modelAndView;
     }
 
