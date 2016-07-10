@@ -5,7 +5,6 @@ import com.cheliadina.filter.AuthorisationFilter;
 import com.cheliadina.model.AuthorisationData;
 import com.cheliadina.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -14,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.time.LocalDateTime;
 
@@ -30,31 +29,30 @@ public class HomeController {
     private UserRepository userRepository;
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
-    public ModelAndView printHello(ModelMap model) {
+    public ModelAndView printHello(ModelMap model, HttpServletRequest httpServletRequest) {
         ModelAndView modelAndView = new ModelAndView();
+        addLoginOptions(modelAndView, httpServletRequest);
         modelAndView.setViewName("index");
-        StringBuilder msgBuilder = new StringBuilder("have: ");
-        for (User u : userRepository.findAll()) {
-            msgBuilder.append(u.getFirstName() + " ");
-        }
-        modelAndView.addObject("msg", msgBuilder.toString());
-
         return modelAndView;
     }
 
-
     @RequestMapping(value = "/login", method = RequestMethod.GET)
-    public ModelAndView login(@RequestParam(name = "error", required = false) boolean error) {
-        createFakeData();
+    public ModelAndView login(@RequestParam(name = "error", required = false) boolean error, HttpServletRequest httpServletRequest) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("login");
         modelAndView.addObject("error", error);
         return modelAndView;
     }
 
+    @RequestMapping(value = "/logout", method = RequestMethod.GET)
+    public String logout(HttpServletRequest httpServletRequest){
+        httpServletRequest.getSession().invalidate();
+        return "redirect:/";
+    }
+
 
     @RequestMapping(value = "/submit-login", method = RequestMethod.POST)
-    public String submitLogin(@ModelAttribute AuthorisationData authData, HttpServletResponse response,
+    public String submitLogin(@ModelAttribute AuthorisationData authData,
                               HttpSession session) {
         User user = userRepository.findByUsernameAndPassword(authData.getUsername(), authData.getPassword());
         if (user != null) {
@@ -65,17 +63,26 @@ public class HomeController {
         return "redirect:/login?error=true";
     }
 
-    private void createFakeData() {
-        User user1 = new User();
-        user1.setFirstName("Petya");
-        user1.setUsername("admin");
-        user1.setPassword("123");
-        try {
+    @RequestMapping(value = "/create-data", method = RequestMethod.GET)
+    public String createFakeData() {
+        if (userRepository.count() == 0) {
+            User user1 = new User();
+            user1.setFirstName("Petya");
+            user1.setUsername("admin");
+            user1.setPassword("123");
             userRepository.save(user1);
-
-        } catch (DataIntegrityViolationException exception) {
-            // todo handle this
         }
+        return "redirect:/";
+    }
+
+    private void addLoginOptions(ModelAndView modelAndView, HttpServletRequest httpServletRequest) {
+        modelAndView.addObject("logged", isLoggedIn(httpServletRequest));
+    }
+
+    private boolean isLoggedIn(HttpServletRequest httpServletRequest) {
+        HttpSession httpSession = httpServletRequest.getSession();
+        LocalDateTime time = (LocalDateTime) httpSession.getAttribute(AuthorisationFilter.AUTH_ATTR);
+       return !(time == null || LocalDateTime.now().isAfter(time.plusMinutes(15)));
     }
 
 
