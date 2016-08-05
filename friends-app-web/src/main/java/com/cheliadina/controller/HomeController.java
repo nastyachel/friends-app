@@ -63,18 +63,6 @@ public class HomeController {
         return "redirect:/login?error=true";
     }
 
-    @RequestMapping(value = "/create-data", method = RequestMethod.GET)
-    public String createFakeData() {
-        if (userRepository.count() == 0) {
-            User user1 = new User();
-            user1.setFirstName("Petya");
-            user1.setUsername("admin");
-            user1.setPassword("123");
-            userRepository.save(user1);
-        }
-        return "redirect:/";
-    }
-
     private void addLoginOptions(ModelAndView modelAndView, HttpServletRequest httpServletRequest) {
         modelAndView.addObject("logged", isLoggedIn(httpServletRequest));
     }
