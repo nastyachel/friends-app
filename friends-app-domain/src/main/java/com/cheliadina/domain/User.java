@@ -3,14 +3,11 @@ package com.cheliadina.domain;
 /**
  * @author nastya
  */
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "USER")
@@ -37,6 +34,10 @@ public class User {
 
     @Column(name = "password")
     private String password;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @Column(name = "friends")
+    private List<User> friends;
 
     public int getId() {
         return id;
@@ -93,4 +94,18 @@ public class User {
     public void setPassword(String password) {
         this.password = password;
     }
+
+    public List<User> getFriends() {
+        return friends;
+    }
+
+    public void addFriend(User friend){
+        if(friends == null){
+            friends = new ArrayList<>();
+        }
+        if(!friends.contains(friend)){
+            friends.add(friend);
+        }
+    }
+
 }

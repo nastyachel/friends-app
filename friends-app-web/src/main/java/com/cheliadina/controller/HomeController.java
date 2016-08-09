@@ -4,19 +4,16 @@ import com.cheliadina.domain.User;
 import com.cheliadina.filter.AuthorisationFilter;
 import com.cheliadina.model.AuthorisationData;
 import com.cheliadina.repositories.UserRepository;
+import com.cheliadina.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.time.LocalDateTime;
-
 
 /**
  * @author nastya
@@ -27,6 +24,9 @@ public class HomeController {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private UserService service;
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public ModelAndView printHello(ModelMap model, HttpServletRequest httpServletRequest) {
@@ -71,6 +71,12 @@ public class HomeController {
         HttpSession httpSession = httpServletRequest.getSession();
         LocalDateTime time = (LocalDateTime) httpSession.getAttribute(AuthorisationFilter.AUTH_ATTR);
        return !(time == null || LocalDateTime.now().isAfter(time.plusMinutes(15)));
+    }
+
+    @RequestMapping(value = "/addFriend", method = RequestMethod.GET)
+    public String addFriendShip(@RequestParam("userId") String userId, @RequestParam("friendId") String friendId){
+        service.addFriendShip(Integer.parseInt(userId), Integer.parseInt(friendId));
+        return "redirect:/";
     }
 
 
