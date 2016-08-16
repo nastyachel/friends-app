@@ -29,11 +29,13 @@ public class HomeController {
     private UserService service;
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
-    public ModelAndView printHello(ModelMap model, HttpServletRequest httpServletRequest) {
-        ModelAndView modelAndView = new ModelAndView();
-        addLoginOptions(modelAndView, httpServletRequest);
-        modelAndView.setViewName("index");
-        return modelAndView;
+    public String getIndex() {
+        return "redirect:/profile";
+    }
+
+    @RequestMapping(value = "/profile", method = RequestMethod.GET)
+    public String getProfile(){
+        return "profile";
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
@@ -47,7 +49,7 @@ public class HomeController {
     @RequestMapping(value = "/logout", method = RequestMethod.GET)
     public String logout(HttpServletRequest httpServletRequest){
         httpServletRequest.getSession().invalidate();
-        return "redirect:/";
+        return "redirect:/login";
     }
 
 
@@ -58,13 +60,9 @@ public class HomeController {
         if (user != null) {
             session.setAttribute(AuthorisationFilter.AUTH_ATTR, LocalDateTime.now());
             session.setAttribute(AuthorisationFilter.USER_ATTR, user);
-            return "redirect:/";
+            return "redirect:/profile";
         }
         return "redirect:/login?error=true";
-    }
-
-    private void addLoginOptions(ModelAndView modelAndView, HttpServletRequest httpServletRequest) {
-        modelAndView.addObject("logged", isLoggedIn(httpServletRequest));
     }
 
     private boolean isLoggedIn(HttpServletRequest httpServletRequest) {
