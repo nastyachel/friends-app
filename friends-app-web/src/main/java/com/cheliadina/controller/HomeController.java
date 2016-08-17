@@ -7,7 +7,6 @@ import com.cheliadina.repositories.UserRepository;
 import com.cheliadina.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -34,12 +33,19 @@ public class HomeController {
     }
 
     @RequestMapping(value = "/profile", method = RequestMethod.GET)
-    public String getProfile(){
-        return "profile";
+    public ModelAndView getProfile(@RequestParam(name = "id", required = false) Integer userId, HttpSession session) {
+        User currentUser = (User) session.getAttribute(AuthorisationFilter.USER_ATTR);
+        User user = (userId == null) ? currentUser : userRepository.findOne(userId);
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("profile");
+        modelAndView.addObject("user", user);
+        modelAndView.addObject("currentId", currentUser.getId());
+        modelAndView.addObject("isFriend", service.checkFriendship(currentUser.getId(), user.getId()));
+        return modelAndView;
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
-    public ModelAndView login(@RequestParam(name = "error", required = false) boolean error, HttpServletRequest httpServletRequest) {
+    public ModelAndView login(@RequestParam(name = "error", required = false) boolean error) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("login");
         modelAndView.addObject("error", error);
@@ -47,7 +53,7 @@ public class HomeController {
     }
 
     @RequestMapping(value = "/logout", method = RequestMethod.GET)
-    public String logout(HttpServletRequest httpServletRequest){
+    public String logout(HttpServletRequest httpServletRequest) {
         httpServletRequest.getSession().invalidate();
         return "redirect:/login";
     }
@@ -65,16 +71,10 @@ public class HomeController {
         return "redirect:/login?error=true";
     }
 
-    private boolean isLoggedIn(HttpServletRequest httpServletRequest) {
-        HttpSession httpSession = httpServletRequest.getSession();
-        LocalDateTime time = (LocalDateTime) httpSession.getAttribute(AuthorisationFilter.AUTH_ATTR);
-       return !(time == null || LocalDateTime.now().isAfter(time.plusMinutes(15)));
-    }
-
     @RequestMapping(value = "/addFriend", method = RequestMethod.GET)
-    public String addFriendShip(@RequestParam("userId") String userId, @RequestParam("friendId") String friendId){
+    public String addFriendShip(@RequestParam("userId") String userId, @RequestParam("friendId") String friendId) {
         service.addFriendShip(Integer.parseInt(userId), Integer.parseInt(friendId));
-        return "redirect:/";
+        return "redirect:/profile?id=" + friendId;
     }
 
 
