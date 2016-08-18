@@ -4,7 +4,6 @@ package com.cheliadina.domain;
  * @author nastya
  */
 import javax.persistence.*;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -105,6 +104,15 @@ public class User {
         }
         if(!friends.contains(friend)){
             friends.add(friend);
+        }
+    }
+
+    public void removeFriend(User friend){
+        if(friends == null){
+            return;
+        }
+        if(friends.contains(friend)){
+            friends.remove(friend);
         }
     }
 

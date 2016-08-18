@@ -3,7 +3,6 @@ package com.cheliadina.controller;
 import com.cheliadina.domain.User;
 import com.cheliadina.filter.AuthorisationFilter;
 import com.cheliadina.model.AuthorisationData;
-import com.cheliadina.repositories.UserRepository;
 import com.cheliadina.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -22,9 +21,6 @@ import java.time.LocalDateTime;
 public class HomeController {
 
     @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
     private UserService service;
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
@@ -35,7 +31,7 @@ public class HomeController {
     @RequestMapping(value = "/profile", method = RequestMethod.GET)
     public ModelAndView getProfile(@RequestParam(name = "id", required = false) Integer userId, HttpSession session) {
         User currentUser = (User) session.getAttribute(AuthorisationFilter.USER_ATTR);
-        User user = (userId == null) ? currentUser : userRepository.findOne(userId);
+        User user = (userId == null) ? currentUser : service.getUser(userId);
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("profile");
         modelAndView.addObject("user", user);
@@ -62,7 +58,7 @@ public class HomeController {
     @RequestMapping(value = "/submit-login", method = RequestMethod.POST)
     public String submitLogin(@ModelAttribute AuthorisationData authData,
                               HttpSession session) {
-        User user = userRepository.findByUsernameAndPassword(authData.getUsername(), authData.getPassword());
+        User user = service.getUserByUsernameAndPassword(authData.getUsername(), authData.getPassword());
         if (user != null) {
             session.setAttribute(AuthorisationFilter.AUTH_ATTR, LocalDateTime.now());
             session.setAttribute(AuthorisationFilter.USER_ATTR, user);
@@ -72,9 +68,16 @@ public class HomeController {
     }
 
     @RequestMapping(value = "/addFriend", method = RequestMethod.GET)
-    public String addFriendShip(@RequestParam("userId") String userId, @RequestParam("friendId") String friendId) {
-        service.addFriendShip(Integer.parseInt(userId), Integer.parseInt(friendId));
+    public String addFriendShip(@RequestParam("userId") int userId, @RequestParam("friendId") int friendId) {
+        service.addFriendShip(userId, friendId);
         return "redirect:/profile?id=" + friendId;
+    }
+
+    @RequestMapping(value = "/removeFriend", method = RequestMethod.GET)
+    public String removeFriendship(@RequestParam("userId") int userId, @RequestParam("friendId") int friendId) {
+        service.removeFriendship(userId, friendId);
+        return "redirect:/profile?id=" + friendId;
+
     }
 
 
