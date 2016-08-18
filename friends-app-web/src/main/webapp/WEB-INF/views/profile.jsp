@@ -10,12 +10,13 @@
     <c:if test="${currentId != user.id}">
       <c:choose>
           <c:when test="${isFriend}">
-            <a href="<c:url value='/removeFriend?userId=${currentId}&friendId=${user.id}'/>">Unfriend</a>
+            <a href="<c:url value='/removeFriend?id=${currentId}&friendId=${user.id}'/>">Unfriend</a>
           </c:when>
           <c:otherwise>
-              <a href="<c:url value='/addFriend?userId=${currentId}&friendId=${user.id}'/>">Add friend</a>
+              <a href="<c:url value='/addFriend?id=${currentId}&friendId=${user.id}'/>">Add friend</a>
           </c:otherwise>
       </c:choose>
     </c:if>
+    <a href="<c:url value='/friends?id=${user.id}'/>">Friends</a>
 </body>
 </html>

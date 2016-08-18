@@ -2,6 +2,7 @@ package com.cheliadina.service;
 
 import com.cheliadina.domain.User;
 import com.cheliadina.repositories.UserRepository;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
@@ -16,11 +17,15 @@ public class UserService {
     @Autowired
     UserRepository repository;
 
-    public User getUser(int id){
-        return repository.findOne(id);
+    public User getUser(int id) {
+        User user = repository.findOne(id);
+        if (user == null) {
+            throw new RuntimeException(String.format("No such user in the system (ID: %d)!", id));
+        }
+        return user;
     }
 
-    public User getUserByUsernameAndPassword(String username, String password){
+    public User getUserByUsernameAndPassword(String username, String password) {
         return repository.findByUsernameAndPassword(username, password);
     }
 
@@ -35,7 +40,10 @@ public class UserService {
         repository.save(user);
     }
 
-    public void removeFriendship(int userId, int friendId){
+    public void removeFriendship(int userId, int friendId) {
+        if (userId == friendId) {
+            return;
+        }
         User user = repository.findOne(userId);
         User friend = repository.findOne(friendId);
         if (user == null || friend == null) {
@@ -45,8 +53,8 @@ public class UserService {
         repository.save(user);
     }
 
-    public boolean checkFriendship(int userId, int friendId){
-        if(userId == friendId){
+    public boolean checkFriendship(int userId, int friendId) {
+        if (userId == friendId) {
             return false;
         }
         User user = repository.findOne(userId);
@@ -55,6 +63,15 @@ public class UserService {
             throw new RuntimeException(String.format("No such users in the system (IDs: %d and %d)!", userId, friendId));
         }
         return user.getFriends().contains(friend);
+    }
+
+    public User getUserWithFriends(int userId) {
+        User user = repository.findOne(userId);
+        if (user == null) {
+            throw new RuntimeException(String.format("No such user in the system (ID: %d)!", userId));
+        }
+        Hibernate.initialize(user.getFriends());
+        return user;
     }
 
 }

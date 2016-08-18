@@ -68,16 +68,33 @@ public class HomeController {
     }
 
     @RequestMapping(value = "/addFriend", method = RequestMethod.GET)
-    public String addFriendShip(@RequestParam("userId") int userId, @RequestParam("friendId") int friendId) {
+    public String addFriendShip(@RequestParam("id") int userId, @RequestParam("friendId") int friendId) {
         service.addFriendShip(userId, friendId);
         return "redirect:/profile?id=" + friendId;
     }
 
     @RequestMapping(value = "/removeFriend", method = RequestMethod.GET)
-    public String removeFriendship(@RequestParam("userId") int userId, @RequestParam("friendId") int friendId) {
+    public String removeFriendship(@RequestParam("id") int userId, @RequestParam("friendId") int friendId) {
         service.removeFriendship(userId, friendId);
         return "redirect:/profile?id=" + friendId;
 
+    }
+
+    @RequestMapping(value = "/friends", method = RequestMethod.GET)
+    public ModelAndView getFriends(
+            @RequestParam(name = "id", required = false) Integer userId,
+            HttpSession httpSession) {
+
+        if(userId == null){
+            User currentUserOld = (User) httpSession.getAttribute(AuthorisationFilter.USER_ATTR); // current logged in user
+            userId = currentUserOld.getId(); // friends can be loaded for user only in current hibernate session
+        }
+        User user = service.getUserWithFriends(userId);
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("friends");
+        modelAndView.addObject("user", user);
+        return modelAndView;
     }
 
 
