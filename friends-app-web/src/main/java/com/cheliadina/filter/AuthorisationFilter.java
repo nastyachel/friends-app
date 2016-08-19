@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 /**
  * @author nastya
  */
-public class AuthorisationFilter implements Filter{
+public class AuthorisationFilter implements Filter {
 
     public static final String AUTH_ATTR = "login_attr";
     public static final String USER_ATTR = "user_attr";
@@ -24,16 +24,32 @@ public class AuthorisationFilter implements Filter{
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpSession httpSession = ((HttpServletRequest) servletRequest).getSession();
-        LocalDateTime time =  (LocalDateTime) httpSession.getAttribute(AUTH_ATTR);
-        if(time == null || LocalDateTime.now().isAfter(time.plusMinutes(SESSION_TIME_MINUTES))){
-            ((HttpServletResponse) servletResponse).sendRedirect("/login");
-            return;
+        LocalDateTime time = (LocalDateTime) httpSession.getAttribute(AUTH_ATTR);
+        if (isLoggedIn(time)) {
+            if (isLoginIntention(servletRequest)) {
+                ((HttpServletResponse) servletResponse).sendRedirect("/");
+                return;
+            }
+        } else {
+            if (!isLoginIntention(servletRequest)) {
+                ((HttpServletResponse) servletResponse).sendRedirect("/login");
+                return;
+            }
         }
         filterChain.doFilter(servletRequest, servletResponse);
+    }
+
+    private boolean isLoginIntention(ServletRequest servletRequest) {
+        String uri = ((HttpServletRequest) servletRequest).getRequestURI();
+        return uri.equalsIgnoreCase("/login")||uri.equalsIgnoreCase("/submit-login");
     }
 
     @Override
     public void destroy() {
 
+    }
+
+    private boolean isLoggedIn(LocalDateTime time) {
+        return time != null && !LocalDateTime.now().isAfter(time.plusMinutes(SESSION_TIME_MINUTES));
     }
 }
