@@ -36,6 +36,10 @@ public class User {
     @Column(name = "friends")
     private List<User> friends = new ArrayList<>();
 
+    @ManyToMany(fetch = FetchType.LAZY)
+    @Column(name = "hobbies")
+    private List<Hobby> hobbies = new ArrayList<>();
+
     public int getId() {
         return id;
     }
