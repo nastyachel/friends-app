@@ -5,7 +5,7 @@ import com.cheliadina.repositories.UserRepository;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author nastya
@@ -65,12 +65,10 @@ public class UserService {
         return user.getFriends().contains(friend);
     }
 
-    public User getUserWithFriends(int userId) {
-        User user = repository.findOne(userId);
-        if (user == null) {
-            throw new RuntimeException(String.format("No such user in the system (ID: %d)!", userId));
-        }
+    public User getFullUser(int userId) {
+        User user = getUser(userId);
         Hibernate.initialize(user.getFriends());
+        Hibernate.initialize(user.getPosts());
         return user;
     }
 

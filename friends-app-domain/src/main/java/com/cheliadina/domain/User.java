@@ -12,6 +12,7 @@ import java.util.List;
 @Entity
 @Table(name = "USER")
 public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "USER_ID")
@@ -39,6 +40,10 @@ public class User {
     @ManyToMany(fetch = FetchType.LAZY)
     @Column(name = "hobbies")
     private List<Hobby> hobbies = new ArrayList<>();
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @Column(name = "posts")
+    private List<Post> posts = new ArrayList<>();
 
     public int getId() {
         return id;
@@ -92,6 +97,26 @@ public class User {
         return friends;
     }
 
+    public void setFriends(List<User> friends) {
+        this.friends = friends;
+    }
+
+    public List<Hobby> getHobbies() {
+        return hobbies;
+    }
+
+    public void setHobbies(List<Hobby> hobbies) {
+        this.hobbies = hobbies;
+    }
+
+    public List<Post> getPosts() {
+        return posts;
+    }
+
+    public void setPosts(List<Post> posts) {
+        this.posts = posts;
+    }
+
     public void addFriend(User friend) {
         if (!friends.contains(friend)) {
             friends.add(friend);
@@ -102,6 +127,10 @@ public class User {
         if (friends.contains(friend)) {
             friends.remove(friend);
         }
+    }
+
+    public void addPost(Post post){
+        posts.add(post);
     }
 
     @Override
