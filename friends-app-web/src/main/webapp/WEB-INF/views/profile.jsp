@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -23,5 +24,19 @@
         </c:choose>
     </c:otherwise>
 </c:choose>
+<div>
+    <ul>
+        <c:forEach var = "post" items="${user.posts}">
+            <li>
+                <div>
+                    <h4>${user.firstName} ${user.lastName}</h4>
+
+                    <span><fmt:formatDate pattern="dd-MM-yyyy HH:mm" value="${post.timeCreated}"/></span>
+                    <p>${post.content}</p>
+                </div>
+            </li>
+        </c:forEach>
+    </ul>
+</div>
 </body>
 </html>
