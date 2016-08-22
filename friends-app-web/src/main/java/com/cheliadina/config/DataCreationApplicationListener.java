@@ -1,7 +1,9 @@
 package com.cheliadina.config;
 
+import com.cheliadina.domain.Post;
 import com.cheliadina.domain.User;
 import com.cheliadina.repositories.UserRepository;
+import org.jboss.logging.annotations.Pos;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -31,7 +33,8 @@ public class DataCreationApplicationListener implements ApplicationListener<Cont
             user3.setFirstName("Max");
             user3.setUsername("maxmax");
             user3.setPassword("123");
-
+            user3.addPost(new Post("Hello world!"));
+            user3.addPost(new Post("What a wonderful day! :)"));
             userRepository.save(user1);
             userRepository.save(user2);
             userRepository.save(user3);

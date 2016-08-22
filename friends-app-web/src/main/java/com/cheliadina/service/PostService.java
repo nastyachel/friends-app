@@ -27,4 +27,10 @@ public class PostService {
         currentUser.addPost(post);
         userRepository.save(currentUser);
     }
+
+    public void deletePost(int postId, int currentUserId) {
+        User currentUser = userService.getFullUser(currentUserId);
+        currentUser.removePost(postId);
+        userRepository.save(currentUser);
+    }
 }

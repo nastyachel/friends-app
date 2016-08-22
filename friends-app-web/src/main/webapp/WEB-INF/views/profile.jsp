@@ -10,7 +10,7 @@
 <h1>${user.firstName} ${user.lastName}</h1>
 <a href="<c:url value='/friends?id=${user.id}'/>">Friends</a>
 <c:choose>
-    <c:when test="${currentId == user.id}">
+    <c:when test="${currentUserId == user.id}">
         <jsp:include page="create-post.jsp"/>
     </c:when>
     <c:otherwise>
@@ -30,7 +30,9 @@
             <li>
                 <div>
                     <h4>${user.firstName} ${user.lastName}</h4>
-
+                    <c:if test="${currentUserId == user.id}">
+                        <a href="<c:url value='/delete-post?id=${post.id}'/>">delete</a>
+                    </c:if>
                     <span><fmt:formatDate pattern="dd-MM-yyyy HH:mm" value="${post.timeCreated}"/></span>
                     <p>${post.content}</p>
                 </div>

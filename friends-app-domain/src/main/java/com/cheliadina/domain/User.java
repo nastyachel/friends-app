@@ -133,6 +133,15 @@ public class User {
         posts.add(post);
     }
 
+    public void removePost(int postId){
+        for (Post post : getPosts()) {
+            if (post.getId() == postId) {
+                posts.remove(post);
+                break;
+            }
+        }
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

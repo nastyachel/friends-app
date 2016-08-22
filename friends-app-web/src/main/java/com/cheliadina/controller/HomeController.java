@@ -34,13 +34,16 @@ public class HomeController {
 
     @RequestMapping(value = "/profile", method = RequestMethod.GET)
     public ModelAndView getProfile(@RequestParam(name = "id", required = false) Integer userId, HttpSession httpSession) {
-        User currentUser = userService.getFullUser(getCurrentUserId(httpSession));
-        User user = (userId == null) ? currentUser : userService.getUser(userId);
+        int currentUserId = getCurrentUserId(httpSession);
+        if(userId == null){
+            userId = currentUserId;
+        }
+        User user = userService.getFullUser(userId);
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("profile");
         modelAndView.addObject("user", user);
-        modelAndView.addObject("currentId", currentUser.getId());
-        modelAndView.addObject("isFriend", userService.checkFriendship(currentUser.getId(), user.getId()));
+        modelAndView.addObject("currentUserId", currentUserId);
+        modelAndView.addObject("isFriend", userService.checkFriendship(currentUserId, user.getId()));
         return modelAndView;
     }
 
@@ -112,6 +115,12 @@ public class HomeController {
             throw new RuntimeException("No user in the session");
         }
         return userId;
+    }
+
+    @RequestMapping(value = "/delete-post", method = RequestMethod.GET)
+    public String deletePost(@RequestParam Integer id, HttpSession httpSession){
+        postService.deletePost(id, getCurrentUserId(httpSession));
+        return "redirect:/profile";
     }
 
 

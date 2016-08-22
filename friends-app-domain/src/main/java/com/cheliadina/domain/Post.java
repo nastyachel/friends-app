@@ -25,6 +25,11 @@ public class Post {
         timeCreated = new Date();
     }
 
+    public Post(String content){
+        this();
+        this.content = content;
+    }
+
     public int getId() {
         return id;
     }
