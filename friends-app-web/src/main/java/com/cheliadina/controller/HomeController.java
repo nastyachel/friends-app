@@ -35,7 +35,7 @@ public class HomeController {
     @RequestMapping(value = "/profile", method = RequestMethod.GET)
     public ModelAndView getProfile(@RequestParam(name = "id", required = false) Integer userId, HttpSession httpSession) {
         int currentUserId = getCurrentUserId(httpSession);
-        if(userId == null){
+        if (userId == null) {
             userId = currentUserId;
         }
         User user = userService.getFullUser(userId);
@@ -74,15 +74,15 @@ public class HomeController {
         return "redirect:/login?error=true";
     }
 
-    @RequestMapping(value = "/addFriend", method = RequestMethod.GET)
-    public String addFriendShip(@RequestParam("id") int userId, @RequestParam("friendId") int friendId) {
-        userService.addFriendShip(userId, friendId);
+    @RequestMapping(value = "/add-friend", method = RequestMethod.GET)
+    public String addFriendShip(@RequestParam("friendId") int friendId, HttpSession httpSession) {
+        userService.addFriendShip(getCurrentUserId(httpSession), friendId);
         return "redirect:/profile?id=" + friendId;
     }
 
-    @RequestMapping(value = "/removeFriend", method = RequestMethod.GET)
-    public String removeFriendship(@RequestParam("id") int userId, @RequestParam("friendId") int friendId) {
-        userService.removeFriendship(userId, friendId);
+    @RequestMapping(value = "/delete-friend", method = RequestMethod.GET)
+    public String removeFriendship( @RequestParam("friendId") int friendId, HttpSession httpSession) {
+        userService.removeFriendship(getCurrentUserId(httpSession), friendId);
         return "redirect:/profile?id=" + friendId;
 
     }
@@ -92,36 +92,46 @@ public class HomeController {
             @RequestParam(name = "id", required = false) Integer userId,
             HttpSession httpSession) {
 
-        if(userId == null){
+        if (userId == null) {
             userId = getCurrentUserId(httpSession);
         }
         User user = userService.getFullUser(userId);
+        User currentUser = userService.getFullUser(getCurrentUserId(httpSession));
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("friends");
         modelAndView.addObject("user", user);
+        modelAndView.addObject("currentUser", currentUser);
         return modelAndView;
     }
 
-    @RequestMapping(value="/create-post", method = RequestMethod.POST)
-    public String createPost(String content, HttpSession httpSession){
+    @RequestMapping(value = "/create-post", method = RequestMethod.POST)
+    public String createPost(String content, HttpSession httpSession) {
         postService.createPost(content, getCurrentUserId(httpSession));
         return "redirect:/profile";
     }
 
-    private int getCurrentUserId(HttpSession httpSession){
-        Integer userId = (Integer) httpSession.getAttribute(AuthorisationFilter.USER_ATTR);
-        if(userId == null){
-            throw new RuntimeException("No user in the session");
-        }
-        return userId;
-    }
-
     @RequestMapping(value = "/delete-post", method = RequestMethod.GET)
-    public String deletePost(@RequestParam Integer id, HttpSession httpSession){
+    public String deletePost(@RequestParam Integer id, HttpSession httpSession) {
         postService.deletePost(id, getCurrentUserId(httpSession));
         return "redirect:/profile";
     }
 
+    @RequestMapping(value = "/find-friends", method = RequestMethod.GET)
+    public ModelAndView findFriends(HttpSession httpSession) {
+        int currentUserId = getCurrentUserId(httpSession);
+        ModelAndView modelAndView = new ModelAndView("find-friends");
+        modelAndView.addObject("users", userService.findFriends(currentUserId));
+        modelAndView.addObject("currentUserId", currentUserId);
+        return modelAndView;
+    }
+
+    private int getCurrentUserId(HttpSession httpSession) {
+        Integer userId = (Integer) httpSession.getAttribute(AuthorisationFilter.USER_ATTR);
+        if (userId == null) {
+            throw new RuntimeException("No user in the session");
+        }
+        return userId;
+    }
 
 }

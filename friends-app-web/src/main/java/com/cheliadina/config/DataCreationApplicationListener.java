@@ -35,6 +35,8 @@ public class DataCreationApplicationListener implements ApplicationListener<Cont
             user3.setPassword("123");
             user3.addPost(new Post("Hello world!"));
             user3.addPost(new Post("What a wonderful day! :)"));
+            user3.addFriend(user2);
+            user3.addFriend(user1);
             userRepository.save(user1);
             userRepository.save(user2);
             userRepository.save(user3);

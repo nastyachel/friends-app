@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 /**
  * @author nastya
  */
@@ -30,6 +32,9 @@ public class UserService {
     }
 
     public void addFriendShip(int userId, int friendId) {
+        if (userId == friendId) {
+            return;
+        }
         User user = repository.findOne(userId);
         User friend = repository.findOne(friendId);
         if (user == null || friend == null) {
@@ -70,6 +75,14 @@ public class UserService {
         Hibernate.initialize(user.getFriends());
         Hibernate.initialize(user.getPosts());
         return user;
+    }
+
+    public List<User> findFriends(int currentUserId){
+        User currentUser = getUser(currentUserId);
+        List<User> notFriends = repository.findAll(); // todo add paging
+        notFriends.removeAll(currentUser.getFriends());
+        notFriends.remove(currentUser);
+        return notFriends;
     }
 
 }
