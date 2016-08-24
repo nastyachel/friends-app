@@ -9,6 +9,20 @@
 <jsp:include page="mymenu.jsp"/>
 <h1>${user.firstName} ${user.lastName}</h1>
 <a href="<c:url value='/friends?id=${user.id}'/>">Friends</a>
+
+<c:if test="${not empty user.hobbies}">
+<div>
+    <h3>Hobbies</h3>
+    <p>
+    <c:forEach var="hobby" items="${user.hobbies}" varStatus="loop">
+        <span>
+            <a href="<c:url value='/find-friends-by-hobby?id=${hobby.id}'/>">${hobby.title}</a><c:if test="${not loop.last}">, </c:if>
+        </span>
+    </c:forEach>
+    </p>
+</div>
+</c:if>
+
 <c:choose>
     <c:when test="${currentUserId == user.id}">
         <jsp:include page="create-post.jsp"/>

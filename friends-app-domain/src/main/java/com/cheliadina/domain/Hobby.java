@@ -18,12 +18,13 @@ public class Hobby {
     @Column(name = "title")
     private String title;
 
-    @Column(name = "description")
-    private String description;
+    public Hobby(){
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @Column(name = "users")
-    List<User> users;
+    }
+
+    public Hobby(String title){
+        this.title = title;
+    }
 
     public int getId() {
         return id;
@@ -39,24 +40,6 @@ public class Hobby {
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public List<User> getUsers(){
-        return users;
-    }
-
-    public void addUser(User user){
-        if(!users.contains(user)){
-            users.add(user);
-        }
     }
 
 }

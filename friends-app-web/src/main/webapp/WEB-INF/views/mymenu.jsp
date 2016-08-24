@@ -3,6 +3,6 @@
 <div>
     <a href="<c:url value='/profile'/>">My profile</a>
     <a href="<c:url value='/find-friends'/>">Find friends</a>
-    <a href="<c:url value='/friends'/>">My friends</a>
+    <a href="<c:url value='/edit-profile'/>">Edit profile</a>
     <a href="<c:url value='/logout'/>">Logout</a>
 </div>

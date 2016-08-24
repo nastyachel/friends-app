@@ -37,7 +37,7 @@ public class User {
     @Column(name = "friends")
     private List<User> friends = new ArrayList<>();
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @Column(name = "hobbies")
     private List<Hobby> hobbies = new ArrayList<>();
 
@@ -140,6 +140,10 @@ public class User {
                 break;
             }
         }
+    }
+
+    public void addHobby(Hobby hobby){
+        hobbies.add(hobby);
     }
 
     @Override

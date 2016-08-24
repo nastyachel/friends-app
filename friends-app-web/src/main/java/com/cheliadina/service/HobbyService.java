@@ -8,6 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * @author nastya
  */
@@ -16,16 +20,26 @@ import org.springframework.transaction.annotation.Transactional;
 public class HobbyService {
 
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
     @Autowired
-    HobbyRepository hobbyRepository;
+    private HobbyRepository hobbyRepository;
 
-    public void addNewHobby(int userId, String hobbyTitle, String description) {
-        User user = userRepository.findOne(userId);
-        Hobby hobby = new Hobby();
-        hobby.setTitle(hobbyTitle);
-        hobby.setDescription(description);
-        hobbyRepository.save(hobby);
+    public Hobby getHobby(int id){
+        return hobbyRepository.findOne(id);
     }
+
+    public void createHobby(String hobbyTitle, int userId) {
+        User user = userRepository.findOne(userId);
+        Hobby hobby = new Hobby(hobbyTitle.trim());
+        user.addHobby(hobby);
+        userRepository.save(user);
+    }
+
+    public Collection<User> findFriendsByHobby(String hobbyTitle, User currentUser){
+        Set<User> users = new HashSet<>(userRepository.findByHobbies_TitleIgnoreCase(hobbyTitle));
+        users.remove(currentUser);
+        return users;
+    }
+
 }

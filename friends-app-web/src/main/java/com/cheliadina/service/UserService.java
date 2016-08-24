@@ -74,6 +74,7 @@ public class UserService {
         User user = getUser(userId);
         Hibernate.initialize(user.getFriends());
         Hibernate.initialize(user.getPosts());
+        Hibernate.initialize(user.getHobbies());
         return user;
     }
 
@@ -84,5 +85,4 @@ public class UserService {
         notFriends.remove(currentUser);
         return notFriends;
     }
-
 }

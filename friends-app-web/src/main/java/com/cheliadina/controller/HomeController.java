@@ -3,6 +3,8 @@ package com.cheliadina.controller;
 import com.cheliadina.domain.User;
 import com.cheliadina.filter.AuthorisationFilter;
 import com.cheliadina.model.AuthorisationData;
+import com.cheliadina.model.FindFriendsViewType;
+import com.cheliadina.service.HobbyService;
 import com.cheliadina.service.PostService;
 import com.cheliadina.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +28,9 @@ public class HomeController {
 
     @Autowired
     private PostService postService;
+
+    @Autowired
+    private HobbyService hobbyService;
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String getIndex() {
@@ -120,9 +125,38 @@ public class HomeController {
     @RequestMapping(value = "/find-friends", method = RequestMethod.GET)
     public ModelAndView findFriends(HttpSession httpSession) {
         int currentUserId = getCurrentUserId(httpSession);
+        User currentUser = userService.getFullUser(currentUserId);
         ModelAndView modelAndView = new ModelAndView("find-friends");
+        modelAndView.addObject("type", FindFriendsViewType.DEFAULT);
         modelAndView.addObject("users", userService.findFriends(currentUserId));
-        modelAndView.addObject("currentUserId", currentUserId);
+        modelAndView.addObject("currentUser", currentUser);
+        return modelAndView;
+    }
+
+    @RequestMapping(value = "/create-hobby", method = RequestMethod.POST)
+    public String createHobby(String title, HttpSession httpSession){
+        hobbyService.createHobby(title, getCurrentUserId(httpSession));
+        return "redirect:/edit-profile";
+    }
+
+    @RequestMapping(value="/edit-profile", method = RequestMethod.GET)
+    public ModelAndView editHobbies(HttpSession httpSession){
+        User user = userService.getFullUser(getCurrentUserId(httpSession));
+        ModelAndView modelAndView = new ModelAndView("edit-profile");
+        modelAndView.addObject("user", user);
+        return modelAndView;
+    }
+
+    @RequestMapping(value = "/find-friends-by-hobby", method = RequestMethod.GET)
+    public ModelAndView findFriendsByHobby(@RequestParam int id, HttpSession httpSession){
+        int currentUserId = getCurrentUserId(httpSession);
+        User currentUser = userService.getFullUser(currentUserId);
+        String hobbyTitle  = hobbyService.getHobby(id).getTitle();
+        ModelAndView modelAndView = new ModelAndView("find-friends");
+        modelAndView.addObject("type", FindFriendsViewType.HOBBIES);
+        modelAndView.addObject("hobbyTitle", hobbyTitle);
+        modelAndView.addObject("users", hobbyService.findFriendsByHobby(hobbyTitle, currentUser));
+        modelAndView.addObject("currentUser", currentUser);
         return modelAndView;
     }
 
