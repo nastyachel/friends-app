@@ -1,12 +1,13 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="my" tagdir="/WEB-INF/tags"%>
+<!DOCTYPE html>
 <html>
 <head>
     <title>Find friends</title>
 </head>
 <body>
-<jsp:include page="mymenu.jsp"/>
+<jsp:include page="_my-menu.jsp"/>
 <div>
     <c:choose>
         <c:when test="${type == 'HOBBIES'}">

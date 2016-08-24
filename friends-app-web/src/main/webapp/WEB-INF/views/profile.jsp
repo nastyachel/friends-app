@@ -1,12 +1,13 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<!DOCTYPE html>
 <html>
 <head>
     <title>My Profile</title>
 </head>
 <body>
-<jsp:include page="mymenu.jsp"/>
+<jsp:include page="_my-menu.jsp"/>
 <h1>${user.firstName} ${user.lastName}</h1>
 <a href="<c:url value='/friends?id=${user.id}'/>">Friends</a>
 
@@ -25,7 +26,7 @@
 
 <c:choose>
     <c:when test="${currentUserId == user.id}">
-        <jsp:include page="create-post.jsp"/>
+        <jsp:include page="_create-post.jsp"/>
     </c:when>
     <c:otherwise>
         <c:choose>

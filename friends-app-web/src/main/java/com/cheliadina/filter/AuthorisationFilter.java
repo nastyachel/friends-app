@@ -25,23 +25,26 @@ public class AuthorisationFilter implements Filter {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpSession httpSession = ((HttpServletRequest) servletRequest).getSession();
         LocalDateTime time = (LocalDateTime) httpSession.getAttribute(AUTH_ATTR);
-        if (isLoggedIn(time)) {
-            if (isLoginIntention(servletRequest)) {
-                ((HttpServletResponse) servletResponse).sendRedirect("/");
-                return;
-            }
-        } else {
-            if (!isLoginIntention(servletRequest)) {
-                ((HttpServletResponse) servletResponse).sendRedirect("/login");
-                return;
+        String uri = ((HttpServletRequest) servletRequest).getRequestURI();
+        if (!uri.startsWith("/resources")) {
+            if (isLoggedIn(time)) {
+                if (isLoginIntention(uri)) {
+                    ((HttpServletResponse) servletResponse).sendRedirect("/");
+                    return;
+                }
+            } else {
+                if (!isLoginIntention(uri)) {
+                    ((HttpServletResponse) servletResponse).sendRedirect("/login");
+                    return;
+                }
             }
         }
         filterChain.doFilter(servletRequest, servletResponse);
     }
 
-    private boolean isLoginIntention(ServletRequest servletRequest) {
-        String uri = ((HttpServletRequest) servletRequest).getRequestURI();
-        return uri.equalsIgnoreCase("/login")||uri.equalsIgnoreCase("/submit-login");
+    private boolean isLoginIntention(String uri) {
+        return uri.equalsIgnoreCase("/login")
+                || uri.equalsIgnoreCase("/submit-login");
     }
 
     @Override

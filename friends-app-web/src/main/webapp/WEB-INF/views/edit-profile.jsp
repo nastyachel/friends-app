@@ -1,11 +1,12 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<!DOCTYPE html>
 <html>
 <head>
     <title>Edit profile</title>
 </head>
 <body>
-<jsp:include page="mymenu.jsp"/>
+<jsp:include page="_my-menu.jsp"/>
 <h1>${user.firstName} ${user.lastName}</h1>
 <div>
     <h3>Hobbies</h3>
