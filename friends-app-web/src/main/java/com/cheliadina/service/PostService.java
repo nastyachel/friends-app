@@ -21,8 +21,11 @@ public class PostService {
     UserService userService;
 
     public void createPost(String content, int currentUserId) {
-        Post post = new Post();
-        post.setContent(content);
+        if (content.trim().isEmpty())
+        {
+            return;
+        }
+        Post post = new Post(content);
         User currentUser = userService.getFullUser(currentUserId);
         currentUser.addPost(post);
         userRepository.save(currentUser);

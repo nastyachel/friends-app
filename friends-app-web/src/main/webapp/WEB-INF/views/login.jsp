@@ -1,39 +1,40 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<!DOCTYPE html>
-<html>
-<head>
-    <title>FRIENDS APP</title>
-
-    <link href="<c:url value="/resources/css/bootstrap.css" />" rel="stylesheet"/>
-    <script src="<c:url value="/resources/js/bootstrap.js" />"></script>
-</head>
-<body>
+<jsp:include page="_head-with-title.jsp">
+    <jsp:param name="title" value="Login"/>
+</jsp:include>
 
 <div class="row">
-    <div class="container col-md-2 col-md-offset-5">
+    <div class="col-xs-12">
         <c:if test="${error}">
-            <div class="alert alert-danger">
-                <strong>Error!</strong> User with this username and password is not found
-            </div>
+        <div class="alert alert-danger">
+            <strong>Error!</strong> User with this username and password is not found
+        </div>
         </c:if>
-        <form action="<c:url value='/submit-login'/>" method="post">
-            <div class="form-group">
-                <label for="username" class="text-center">Username</label>
-                <input id="username" name="username" type="text" placeholder="username"/>
-            </div>
-            <div class="form-group">
-                <label for="password" class="text-center">Password</label>
-                <input id="password" name="password" type="password" placeholder="password"/>
-            </div>
-
-            <div class="form-group">
-                <button type="submit" class="btn btn-primary btn-block">Login</button>
-            </div>
-        </form>
-
     </div>
 </div>
-</body>
-</html>
+
+<form class="form-horizontal" role="form" action="<c:url value='/submit-login'/>" method="post">
+    <div class="form-group">
+        <label for="username" class="col-xs-2 control-label">Username</label>
+        <div class="col-xs-10">
+            <input id="username" name="username" class="form-control" type="text" placeholder="Username"/>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="password" class="col-xs-2 control-label">Password</label>
+        <div class="col-xs-10">
+            <input id="password" name="password" class="form-control" type="password" placeholder="Password"/>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-xs-offset-2 col-xs-10">
+            <button type="submit" class="btn btn-primary btn-block">Login</button>
+        </div>
+    </div>
+</form>
+
+<jsp:include page="_foot.jsp"/>

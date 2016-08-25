@@ -10,6 +10,10 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
+
 /**
  * @author nastya
  */
@@ -26,6 +30,7 @@ public class DataCreationApplicationListener implements ApplicationListener<Cont
             user1.setFirstName("Freddy");
             user1.setUsername("admin");
             user1.setPassword("123");
+            user1.setBirthday(1993, 8, 19);
             User user2 = new User();
             user2.setFirstName("Lucky");
             user2.setUsername("lucky12");

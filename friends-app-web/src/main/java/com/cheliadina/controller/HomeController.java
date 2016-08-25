@@ -40,15 +40,18 @@ public class HomeController {
     @RequestMapping(value = "/profile", method = RequestMethod.GET)
     public ModelAndView getProfile(@RequestParam(name = "id", required = false) Integer userId, HttpSession httpSession) {
         int currentUserId = getCurrentUserId(httpSession);
+        User currentUser = userService.getFullUser(currentUserId);
+        User user;
         if (userId == null) {
-            userId = currentUserId;
+            user = currentUser;
         }
-        User user = userService.getFullUser(userId);
+        else {
+            user = userService.getFullUser(userId);
+        }
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("profile");
         modelAndView.addObject("user", user);
-        modelAndView.addObject("currentUserId", currentUserId);
-        modelAndView.addObject("isFriend", userService.checkFriendship(currentUserId, user.getId()));
+        modelAndView.addObject("currentUser", currentUser);
         return modelAndView;
     }
 

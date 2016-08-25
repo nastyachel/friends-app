@@ -1,0 +1,32 @@
+.my-menu {
+    font-size: 16px;
+    margin-bottom: 0;
+}
+
+.edit-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+.edit-list li {
+    margin-bottom: 2px;
+}
+
+.page-title {
+    margin: auto 0 !important;
+}
+
+.post-content {
+    margin: 0;
+}
+
+textarea {
+    resize: none;
+}
+
+pre {
+    border: 0;
+    background-color: transparent;
+    margin: 0;
+    padding: 0;
+}
