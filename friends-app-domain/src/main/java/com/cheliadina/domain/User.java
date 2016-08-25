@@ -129,18 +129,21 @@ public class User {
         }
     }
 
-    public void removeFriend(User friend) {
-        if (friends.contains(friend)) {
-            friends.remove(friend);
+    public void removeFriend(int friendId) {
+        for (User friend : friends) {
+            if(friend.getId() == friendId){
+                friends.remove(friend);
+                break;
+            }
         }
     }
 
-    public void addPost(Post post){
+    public void addPost(Post post) {
         posts.add(post);
     }
 
-    public void removePost(int postId){
-        for (Post post : getPosts()) {
+    public void removePost(int postId) {
+        for (Post post : posts) {
             if (post.getId() == postId) {
                 posts.remove(post);
                 break;
@@ -148,8 +151,12 @@ public class User {
         }
     }
 
-    public void addHobby(Hobby hobby){
+    public void addHobby(Hobby hobby) {
         hobbies.add(hobby);
+    }
+
+    public void removeHobby() {
+
     }
 
     @Override

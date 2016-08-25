@@ -45,16 +45,12 @@ public class UserService {
         repository.save(user);
     }
 
-    public void removeFriendship(int userId, int friendId) {
-        if (userId == friendId) {
-            return;
+    public void removeFriendship(int currentUserId, int friendId) {
+        User user = getUser(currentUserId);
+        if (user == null) {
+            throw new RuntimeException(String.format("No such users in the system (IDs: %d and %d)!", currentUserId, friendId));
         }
-        User user = repository.findOne(userId);
-        User friend = repository.findOne(friendId);
-        if (user == null || friend == null) {
-            throw new RuntimeException(String.format("No such users in the system (IDs: %d and %d)!", userId, friendId));
-        }
-        user.removeFriend(friend);
+        user.removeFriend(friendId);
         repository.save(user);
     }
 
