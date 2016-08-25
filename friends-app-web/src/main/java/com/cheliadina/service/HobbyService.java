@@ -29,8 +29,8 @@ public class HobbyService {
         return hobbyRepository.findOne(id);
     }
 
-    public void createHobby(String hobbyTitle, int userId) {
-        User user = userRepository.findOne(userId);
+    public void createHobby(String hobbyTitle, int currentUserId) {
+        User user = userRepository.findOne(currentUserId);
         Hobby hobby = new Hobby(hobbyTitle.trim());
         user.addHobby(hobby);
         userRepository.save(user);
@@ -40,6 +40,12 @@ public class HobbyService {
         Set<User> users = new HashSet<>(userRepository.findByHobbies_TitleIgnoreCase(hobbyTitle));
         users.remove(currentUser);
         return users;
+    }
+
+    public void deleteHobby(int hobbyId, int currentUserId){
+        User user = userRepository.findOne(currentUserId);
+        user.removeHobby(hobbyId);
+        userRepository.save(user);
     }
 
 }

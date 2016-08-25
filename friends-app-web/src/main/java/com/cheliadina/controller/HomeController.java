@@ -163,6 +163,11 @@ public class HomeController {
         return modelAndView;
     }
 
+    @RequestMapping(value = "/delete-hobby", method = RequestMethod.GET)
+    public String deleteHobby(@RequestParam int id, HttpSession httpSession){
+        hobbyService.deleteHobby(id, getCurrentUserId(httpSession));
+        return "redirect:/edit-profile";
+    }
     private int getCurrentUserId(HttpSession httpSession) {
         Integer userId = (Integer) httpSession.getAttribute(AuthorisationFilter.USER_ATTR);
         if (userId == null) {

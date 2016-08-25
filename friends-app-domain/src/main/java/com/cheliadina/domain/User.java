@@ -131,7 +131,7 @@ public class User {
 
     public void removeFriend(int friendId) {
         for (User friend : friends) {
-            if(friend.getId() == friendId){
+            if (friend.getId() == friendId) {
                 friends.remove(friend);
                 break;
             }
@@ -155,8 +155,13 @@ public class User {
         hobbies.add(hobby);
     }
 
-    public void removeHobby() {
-
+    public void removeHobby(int hobbyId) {
+        for (Hobby hobby : hobbies) {
+            if (hobby.getId() == hobbyId) {
+                hobbies.remove(hobby);
+                break;
+            }
+        }
     }
 
     @Override
