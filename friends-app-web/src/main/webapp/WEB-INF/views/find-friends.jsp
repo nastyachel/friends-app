@@ -1,39 +1,50 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="my" tagdir="/WEB-INF/tags"%>
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Find friends</title>
-</head>
-<body>
-<jsp:include page="_my-menu.jsp"/>
-<div>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
+<jsp:include page="_head-with-menu.jsp">
+    <jsp:param name="title" value="Friends"/>
+</jsp:include>
+
     <c:choose>
         <c:when test="${type == 'HOBBIES'}">
-            <h3>People with hobby ${hobbyTitle}</h3>
+            <h4>People with hobby ${hobbyTitle}</h4>
         </c:when>
         <c:when test="${type == 'PLACES'}">
             <%--todo add title for places case--%>
         </c:when>
         <c:otherwise>
-            <h3>Recommended people</h3>
+            <h4>Recommended people</h4>
         </c:otherwise>
     </c:choose>
+    <hr/>
+<div class="row">
+    <div class="col-xs-12">
     <c:choose>
         <c:when test="${empty users}">
-            <span>No more people found</span>
+            <p>No more people found</p>
         </c:when>
         <c:otherwise>
-            <ul>
+            <ul class="list-group">
                 <c:forEach var="user" items="${users}">
-                    <li>
-                        <my:friendWithButton currentUser="${currentUser}" user="${user}"/>
+                    <li class="list-group-item">
+                        <div class="row">
+                            <div class="col-xs-10">
+                                <a href="<c:url value='/profile?id=${user.id}'/>">${user.firstName} ${user.lastName}</a>
+                                <br/>
+                                <span><fmt:formatDate pattern="dd-MM-yyyy" value="${user.birthday}"/></span>
+                            </div>
+                            <div class="col-xs-2">
+                                <my:friendButton currentUser="${currentUser}" user="${user}"/>
+                            </div>
+                        </div>
                     </li>
                 </c:forEach>
             </ul>
         </c:otherwise>
     </c:choose>
-</div>
+        </div>
+    </div>
 </body>
 </html>

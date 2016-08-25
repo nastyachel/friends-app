@@ -10,7 +10,8 @@
 
 <div class="row">
     <div class="col-xs-8">
-        <h3 class="page-title">${user.firstName} ${user.lastName}</h3>
+        <h3>${user.firstName} ${user.lastName}</h3>
+        <h5>Profile</h5>
     </div>
     <div class="col-xs-2">
         <my:friendButton currentUser="${currentUser}" user="${user}"/>

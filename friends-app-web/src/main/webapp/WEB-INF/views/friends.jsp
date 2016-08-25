@@ -9,6 +9,7 @@
 </jsp:include>
 
 <h3>${user.firstName} ${user.lastName}</h3>
+<h5>Friends</h5>
 <hr/>
 <div class="row">
     <div class="col-xs-12">

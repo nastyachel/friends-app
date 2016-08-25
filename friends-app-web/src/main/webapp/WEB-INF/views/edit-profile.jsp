@@ -7,7 +7,8 @@
     <jsp:param name="title" value="Profile"/>
 </jsp:include>
 
-<h3>Edit profile</h3>
+<h3>${user.firstName} ${user.lastName}</h3>
+<h5>Edit profile</h5>
 
 <hr/>
 
