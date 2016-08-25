@@ -1,6 +1,5 @@
 <%@ attribute name="currentUser" required="true" type="com.cheliadina.domain.User" %>
 <%@ attribute name="user" required="true" type="com.cheliadina.domain.User" %>
-<%@ attribute name="cssClass" required="true" %>
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
@@ -14,10 +13,10 @@
 
     <c:choose>
         <c:when test="${hasFriend}">
-            <a href="<c:url value ='/delete-friend?friendId=${user.id}'/>" class="${cssClass}">Unfriend</a>
+            <a href="<c:url value ='/delete-friend?friendId=${user.id}'/>" class="btn btn-default btn-block">Unfriend</a>
         </c:when>
         <c:otherwise>
-            <a href="<c:url value ='/add-friend?friendId=${user.id}'/>" class="${cssClass}">Add friend</a>
+            <a href="<c:url value ='/add-friend?friendId=${user.id}'/>" class="btn btn-primary btn-block">Add friend</a>
         </c:otherwise>
     </c:choose>
 </c:if>

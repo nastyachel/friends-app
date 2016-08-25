@@ -5,6 +5,6 @@
 <%@ taglib prefix="my" tagdir="/WEB-INF/tags" %>
 
 <a href="<c:url value ='/profile?id=${user.id}'/>">${user.firstName} ${user.lastName}</a>
-<my:friendButton currentUser="${currentUser}" user="${user}" cssClass="btn btn-default btn-sm"/>
+<my:friendButton currentUser="${currentUser}" user="${user}"/>
 
 

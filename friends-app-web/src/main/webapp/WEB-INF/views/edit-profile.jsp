@@ -27,7 +27,7 @@
         <label class="col-xs-2 control-label">Hobbies</label>
         <div class="col-xs-10">
             <c:if test="${not empty user.hobbies}">
-            <ul class="edit-list">
+            <ul class="items-list">
                 <c:forEach var="hobby" items="${user.hobbies}" varStatus="loop">
                 <li>
                     <a href="<c:url value="/find-friends-by-hobby?id=${hobby.id}"/>">${hobby.title}</a>

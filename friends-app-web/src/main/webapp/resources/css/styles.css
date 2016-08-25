@@ -3,21 +3,25 @@
     margin-bottom: 0;
 }
 
-.edit-list {
+.items-list {
     list-style-type: none;
     padding: 0;
 }
 
-.edit-list li {
+.items-list li {
     margin-bottom: 2px;
 }
 
-.page-title {
-    margin: auto 0 !important;
+h3 {
+    margin: 0 !important;
 }
 
 .post-content {
     margin: 0;
+}
+
+.list-item {
+    min-height: 40px;
 }
 
 textarea {

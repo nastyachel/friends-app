@@ -13,7 +13,7 @@
         <h3 class="page-title">${user.firstName} ${user.lastName}</h3>
     </div>
     <div class="col-xs-2">
-        <my:friendButton currentUser="${currentUser}" user="${user}" cssClass="btn btn-default btn-block"/>
+        <my:friendButton currentUser="${currentUser}" user="${user}"/>
     </div>
     <div class="col-xs-2">
         <a href="<c:url value='/friends?id=${user.id}'/>" class="btn btn-default btn-block">Friends</a>
