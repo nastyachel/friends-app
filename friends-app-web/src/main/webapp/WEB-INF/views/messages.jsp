@@ -38,7 +38,7 @@
                                         </div>
                                     </c:when>
                                     <c:otherwise>
-                                        <div class="col-xs-3 messages-date-container message-date-container-sent">
+                                        <div class="col-xs-3 messages-date-container messages-date-container-right-align">
                                             <span class="messages-date"><fmt:formatDate pattern="dd-MM-yyyy HH:mm" value="${message.timeSent}"/></span>
                                         </div>
                                         <div class="col-xs-9">

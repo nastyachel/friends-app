@@ -8,8 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author nastya
@@ -22,18 +21,36 @@ public class MessageService {
     private MessageRepository messageRepository;
 
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
-    public List<Message> getDialog(int currentUserId, int friendId){
+    public List<Message> getDialog(int currentUserId, int friendId) {
         List<Message> dialog = messageRepository.findByUserFrom_IdAndUserTo_Id(currentUserId, friendId);
         dialog.addAll(messageRepository.findByUserFrom_IdAndUserTo_Id(friendId, currentUserId));
         Collections.sort(dialog);
         return dialog;
     }
 
-    public void createMessage(String content, int currentUserId, int friendId){
+    public void createMessage(String content, int currentUserId, int friendId) {
         User currentUser = userRepository.findOne(currentUserId);
         User friend = userRepository.findOne(friendId);
         messageRepository.save(new Message(content, currentUser, friend));
     }
+
+    public List<Message> getDialogs(int currentUserId) {
+        // TODO optimize
+        List<Message> allMessages = messageRepository.findByUserFrom_IdOrUserTo_IdOrderByTimeSentAsc(currentUserId, currentUserId);
+        Map<Integer, Message> lastMessagesByUserMap = new HashMap<>();
+        for (Message message : allMessages) {
+
+            int friendId = (message.getUserFrom().getId() == currentUserId)
+                    ? message.getUserTo().getId()
+                    : message.getUserFrom().getId();
+            lastMessagesByUserMap.put(friendId, message);
+        }
+        List<Message> dialogs = new ArrayList<>(lastMessagesByUserMap.values());
+        Collections.sort(dialogs);
+        Collections.reverse(dialogs);
+        return dialogs;
+    }
+
 }

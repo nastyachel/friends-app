@@ -3,8 +3,12 @@
     margin-bottom: 0;
 }
 
+ul {
+    list-style-type: none !important;
+    padding-left: 0 !important;
+}
+
 .items-list {
-    list-style-type: none;
     padding: 0;
 }
 
@@ -51,13 +55,22 @@ h5 {
     padding-top: 5px;
 }
 
-.message-date-container-sent {
+.messages-date-container-right-align {
     text-align: right;
 }
 
 .messages-date {
     color: #aaa;
     font-size: 14px;
+}
+
+.dialog {
+    text-align: left;
+    margin-bottom: 10px;
+}
+
+.post-content {
+    margin-bottom: 5px;
 }
 
 textarea {

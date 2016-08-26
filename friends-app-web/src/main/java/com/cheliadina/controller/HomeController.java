@@ -248,6 +248,17 @@ public class HomeController {
         return "redirect:/profile?id=" + postOwnerId;
     }
 
+    @RequestMapping(value = "/dialogs", method = RequestMethod.GET)
+    public ModelAndView getDialogs(HttpSession httpSession)
+    {
+        int currentUserId = getCurrentUserId(httpSession);
+        List<Message> dialogs = messageService.getDialogs(currentUserId);
+        ModelAndView modelAndView = new ModelAndView("dialogs");
+        modelAndView.addObject("currentUser", userService.getFullUser(currentUserId));
+        modelAndView.addObject("dialogs", dialogs);
+        return modelAndView;
+    }
+
     private void loginUser(User user, HttpSession httpSession) {
         httpSession.setAttribute(AuthorisationFilter.AUTH_ATTR, LocalDateTime.now());
         httpSession.setAttribute(AuthorisationFilter.USER_ATTR, user.getId());

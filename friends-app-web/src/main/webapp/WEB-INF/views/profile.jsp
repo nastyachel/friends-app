@@ -86,7 +86,7 @@
                 </div>
 
                 <div class = "panel-body">
-                    <pre>${post.content}</pre>
+                    <pre class="post-content">${post.content}</pre>
                     <div class="row">
                         <div class="col-xs-2">
                             <c:set var="currentUserLikedPost" value="false" />
@@ -99,7 +99,7 @@
                                 </c:if>
                             </c:forEach>
                             <a href="<c:url value='/like-post?postId=${post.id}&postOwnerId=${user.id}'/>"
-                               class="btn btn-block ${currentUserLikedPost ? 'btn-primary' : 'btn-default'}"
+                               class="btn btn-block btn-sm ${currentUserLikedPost ? 'btn-primary' : 'btn-default'}"
                                title="${usersLikedString}">
                                 Like (${fn:length(post.usersLiked)})
                             </a>
