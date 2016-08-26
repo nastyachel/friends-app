@@ -1,9 +1,6 @@
 package com.cheliadina.config;
 
-import com.cheliadina.domain.Hobby;
-import com.cheliadina.domain.Message;
-import com.cheliadina.domain.Post;
-import com.cheliadina.domain.User;
+import com.cheliadina.domain.*;
 import com.cheliadina.repositories.MessageRepository;
 import com.cheliadina.repositories.PostRepository;
 import com.cheliadina.repositories.UserRepository;
@@ -42,6 +39,7 @@ public class DataCreationApplicationListener implements ApplicationListener<Cont
             user2.setUsername("lucky12");
             user2.setPassword("123");
             user2.setBirthday(1993, 5, 23);
+            user2.addPlace(new Place("Dnipro"));
             User user3 = new User();
             user3.setFirstName("Max");
             user3.setLastName("Biggls");
@@ -53,6 +51,8 @@ public class DataCreationApplicationListener implements ApplicationListener<Cont
             user3.addPost(new Post("What a wonderful day! :)"));
             user3.addHobby(new Hobby("hobby1"));
             user3.addHobby(new Hobby("hobby1"));
+            user3.addPlace(new Place("Dnipro"));
+            user3.addPlace(new Place("Odessa"));
             user3.addFriend(user2);
             user3.addFriend(user1);
 

@@ -7,10 +7,7 @@ import com.cheliadina.filter.AuthorisationFilter;
 import com.cheliadina.model.AuthorisationData;
 import com.cheliadina.model.FindFriendsViewType;
 import com.cheliadina.model.RegistrationData;
-import com.cheliadina.service.HobbyService;
-import com.cheliadina.service.MessageService;
-import com.cheliadina.service.PostService;
-import com.cheliadina.service.UserService;
+import com.cheliadina.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
@@ -40,6 +37,9 @@ public class HomeController {
 
     @Autowired
     private HobbyService hobbyService;
+
+    @Autowired
+    private PlaceService placeService;
 
     @Autowired
     private MessageService messageService;
@@ -193,6 +193,12 @@ public class HomeController {
         return "redirect:/edit-profile";
     }
 
+    @RequestMapping(value = "/create-place", method = RequestMethod.POST)
+    public String createPlace(String title, HttpSession httpSession) {
+        placeService.createPlace(title, getCurrentUserId(httpSession));
+        return "redirect:/edit-profile";
+    }
+
     @RequestMapping(value = "/edit-profile", method = RequestMethod.GET)
     public ModelAndView editHobbies(HttpSession httpSession) {
         User user = userService.getFullUser(getCurrentUserId(httpSession));
@@ -216,9 +222,29 @@ public class HomeController {
         return modelAndView;
     }
 
+    @RequestMapping(value = "/find-friends-by-place", method = RequestMethod.GET)
+    public ModelAndView findFriendsByPlace(@RequestParam int id, HttpSession httpSession) {
+        int currentUserId = getCurrentUserId(httpSession);
+        User currentUser = userService.getFullUser(currentUserId);
+        String placeTitle = placeService.getPlace(id).getTitle();
+        ModelAndView modelAndView = new ModelAndView("find-friends");
+        modelAndView.addObject("type", FindFriendsViewType.PLACES);
+        modelAndView.addObject("placeTitle", placeTitle);
+        modelAndView.addObject("users", placeService.findFriendsByPlace(placeTitle, currentUser));
+        modelAndView.addObject("currentUser", currentUser);
+        modelAndView.addObject("newMessages", messageService.checkUnseenMessages(currentUserId));
+        return modelAndView;
+    }
+
     @RequestMapping(value = "/delete-hobby", method = RequestMethod.GET)
     public String deleteHobby(@RequestParam int id, HttpSession httpSession) {
         hobbyService.deleteHobby(id, getCurrentUserId(httpSession));
+        return "redirect:/edit-profile";
+    }
+
+    @RequestMapping(value = "/delete-place", method = RequestMethod.GET)
+    public String deletePlace(@RequestParam int id, HttpSession httpSession) {
+        placeService.deletePlace(id, getCurrentUserId(httpSession));
         return "redirect:/edit-profile";
     }
 

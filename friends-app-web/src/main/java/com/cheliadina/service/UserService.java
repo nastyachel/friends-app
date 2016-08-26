@@ -60,6 +60,7 @@ public class UserService {
         Hibernate.initialize(user.getFriends());
         Hibernate.initialize(user.getPosts());
         Hibernate.initialize(user.getHobbies());
+        Hibernate.initialize(user.getPlaces());
         return user;
     }
 

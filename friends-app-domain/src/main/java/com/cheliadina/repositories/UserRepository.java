@@ -16,4 +16,5 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     List<User> findByHobbies_TitleIgnoreCase(String title);
 
+    List<User> findByPlaces_TitleIgnoreCase(String title);
 }

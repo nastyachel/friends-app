@@ -44,6 +44,10 @@ public class User {
     private List<Hobby> hobbies = new ArrayList<>();
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @Column(name = "places")
+    private List<Place> places = new ArrayList<>();
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @Column(name = "posts")
     private List<Post> posts = new ArrayList<>();
 
@@ -115,6 +119,14 @@ public class User {
         this.hobbies = hobbies;
     }
 
+    public List<Place> getPlaces() {
+        return places;
+    }
+
+    public void setPlaces(List<Place> places) {
+        this.places = places;
+    }
+
     public List<Post> getPosts() {
         return posts;
     }
@@ -159,6 +171,18 @@ public class User {
         for (Hobby hobby : hobbies) {
             if (hobby.getId() == hobbyId) {
                 hobbies.remove(hobby);
+                break;
+            }
+        }
+    }
+    public void addPlace(Place place) {
+        places.add(place);
+    }
+
+    public void removePlace(int placeId) {
+        for (Place place : places) {
+            if (place.getId() == placeId) {
+                places.remove(place);
                 break;
             }
         }

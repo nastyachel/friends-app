@@ -39,10 +39,36 @@
             </c:if>
             <div class="row">
                 <div class="col-xs-9">
-                    <input type="text" name="title" placeholder="Title" class="form-control input-sm"/>
+                    <input type="text" name="title" placeholder="Hobby" class="form-control input-sm"/>
                 </div>
                 <div class="col-xs-3">
                     <button type="submit" class="btn btn-primary btn-block btn-sm">Add hobby</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<form class="form-horizontal" role="form" action="<c:url value='/create-place'/>" method="post">
+    <div class="form-group">
+        <label class="col-xs-2 control-label">Places</label>
+        <div class="col-xs-10">
+            <c:if test="${not empty user.places}">
+                <ul class="items-list">
+                    <c:forEach var="place" items="${user.places}" varStatus="loop">
+                        <li>
+                            <a href="<c:url value="/find-friends-by-place?id=${place.id}"/>">${place.title}</a>
+                            <a href="<c:url value="/delete-place?id=${place.id}"/>" class="btn btn-default btn-sm">Delete</a>
+                        </li>
+                    </c:forEach>
+                </ul>
+            </c:if>
+            <div class="row">
+                <div class="col-xs-9">
+                    <input type="text" name="title" placeholder="Place" class="form-control input-sm"/>
+                </div>
+                <div class="col-xs-3">
+                    <button type="submit" class="btn btn-primary btn-block btn-sm">Add place</button>
                 </div>
             </div>
         </div>

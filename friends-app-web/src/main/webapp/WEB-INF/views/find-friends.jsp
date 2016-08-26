@@ -12,7 +12,7 @@
             <h4>People with hobby ${hobbyTitle}</h4>
         </c:when>
         <c:when test="${type == 'PLACES'}">
-            <%--todo add title for places case--%>
+            <h4>People with place ${placeTitle}</h4>
         </c:when>
         <c:otherwise>
             <h4>Recommended people</h4>

@@ -56,6 +56,22 @@
         </div>
     </div>
     </c:if>
+
+
+    <c:if test="${not empty user.places}">
+        <div class="form-group">
+            <label class="col-xs-2 control-label">Places</label>
+            <div class="col-xs-10">
+                <p class="form-control-static">
+                    <c:forEach var="place" items="${user.places}" varStatus="loop">
+                <span>
+                    <a href="<c:url value='/find-friends-by-place?id=${place.id}'/>">${place.title}</a><c:if test="${not loop.last}">, </c:if>
+                </span>
+                    </c:forEach>
+                </p>
+            </div>
+        </div>
+    </c:if>
 </form>
 
 <c:if test="${currentUser.id == user.id || not empty user.posts}">
