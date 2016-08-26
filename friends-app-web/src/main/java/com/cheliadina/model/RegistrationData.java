@@ -32,7 +32,7 @@ public class RegistrationData {
     @Size(min = 2, max = 30)
     private String lastName;
 
-    @DateTimeFormat(pattern = "yyyy/MM/dd")
+    @DateTimeFormat(pattern = "MM/dd/yyyy")
     private Date birthday;
 
     public String getUsername() {

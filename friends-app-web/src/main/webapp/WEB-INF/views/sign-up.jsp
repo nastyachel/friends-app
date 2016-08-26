@@ -44,7 +44,12 @@
     <div class="form-group">
         <label for="birthday" class="col-xs-2 control-label">Birthday</label>
         <div class="col-xs-10">
-            <input id="birthday" name="birthday" class="form-control" type="text" placeholder="Birthday"/>
+            <div class="input-group date" data-provide="datepicker">
+                <input id="birthday" name="birthday" type="text" class="form-control datepicker" placeholder="Birthday MM/DD/YYYY">
+                <div class="input-group-addon">
+                    <span class="glyphicon glyphicon-th"></span>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -54,5 +59,11 @@
         </div>
     </div>
 </form>
+
+<script>
+    $(function() {
+        $('.datepicker').datepicker();
+    });
+</script>
 
 <jsp:include page="_foot.jsp"/>
