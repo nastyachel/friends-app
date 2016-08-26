@@ -1,7 +1,6 @@
 package com.cheliadina.domain;
 
 import javax.persistence.*;
-import java.util.Comparator;
 import java.util.Date;
 
 /**

@@ -9,12 +9,17 @@
 </jsp:include>
 
 <div class="row">
-    <div class="col-xs-8">
+    <div class="col-xs-6">
         <h3>${user.firstName} ${user.lastName}</h3>
         <h5>Profile</h5>
     </div>
     <div class="col-xs-2">
         <my:friendButton currentUser="${currentUser}" user="${user}"/>
+    </div>
+    <div class="col-xs-2">
+        <c:if test="${user.id!=currentUser.id}">
+        <a href="<c:url value='/messages?id=${user.id}'/>" class="btn btn-default btn-block">Message</a>
+        </c:if>
     </div>
     <div class="col-xs-2">
         <a href="<c:url value='/friends?id=${user.id}'/>" class="btn btn-default btn-block">Friends</a>
