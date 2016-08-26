@@ -99,9 +99,9 @@
                                 </c:if>
                             </c:forEach>
                             <a href="<c:url value='/like-post?postId=${post.id}&postOwnerId=${user.id}'/>"
-                               class="btn btn-block btn-sm ${currentUserLikedPost ? 'btn-primary' : 'btn-default'}"
+                               class="btn ${currentUserLikedPost ? 'btn-primary' : 'btn-default'}"
                                title="${usersLikedString}">
-                                Like (${fn:length(post.usersLiked)})
+                                Like <span class="badge">${fn:length(post.usersLiked)}</span>
                             </a>
                         </div>
                     </div>

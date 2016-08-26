@@ -25,7 +25,18 @@ public class MessageService {
 
     public List<Message> getDialog(int currentUserId, int friendId) {
         List<Message> dialog = messageRepository.findByUserFrom_IdAndUserTo_Id(currentUserId, friendId);
-        dialog.addAll(messageRepository.findByUserFrom_IdAndUserTo_Id(friendId, currentUserId));
+        List<Message> receivedMessages = messageRepository.findByUserFrom_IdAndUserTo_Id(friendId, currentUserId);
+        for(Message message : receivedMessages)
+        {
+            List<Message> messagesToSave = new ArrayList<>();
+            if (!message.isSeen())
+            {
+                message.setSeen(true);
+                messagesToSave.add(message);
+            }
+            messageRepository.save(messagesToSave);
+        }
+        dialog.addAll(receivedMessages);
         Collections.sort(dialog);
         return dialog;
     }

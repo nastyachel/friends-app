@@ -29,8 +29,12 @@ public class Message implements Comparable<Message>{
     @JoinColumn(name = "USER_TO_ID")
     private User userTo;
 
+    @Column(name = "SEEN")
+    private boolean seen;
+
     public Message(){
         timeSent = new Date();
+        seen = false;
     }
 
     public Message(String content, User userFrom, User userTo){
@@ -38,6 +42,12 @@ public class Message implements Comparable<Message>{
         this.content = content;
         this.userFrom = userFrom;
         this.userTo = userTo;
+    }
+
+    public Message(String content, User userFrom, User userTo, boolean seen)
+    {
+        this(content, userFrom, userTo);
+        this.seen = seen;
     }
 
     public int getId() {
@@ -78,6 +88,14 @@ public class Message implements Comparable<Message>{
 
     public void setTimeSent(Date timeSent) {
         this.timeSent = timeSent;
+    }
+
+    public boolean isSeen() {
+        return seen;
+    }
+
+    public void setSeen(boolean seen) {
+        this.seen = seen;
     }
 
     @Override

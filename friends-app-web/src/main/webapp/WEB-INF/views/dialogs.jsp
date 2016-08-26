@@ -28,16 +28,22 @@
                             </c:otherwise>
                         </c:choose>
                         <li>
-                            <a href="<c:url value='/messages?id=${friend.id}'/>" class="btn btn-block btn-default dialog">
+                            <a href="<c:url value='/messages?id=${friend.id}'/>"
+                               class="btn btn-block btn-default dialog
+                                    ${message.userTo.id == currentUser.id && not message.seen ? 'dialog-unread' : ''}">
+
                                 <div class="row">
-                                    <div class="col-xs-9">
+                                    <div class="col-xs-8">
                                         <strong>${friend.firstName} ${friend.lastName}</strong><br/>
                                         <span>${message.content}</span>
                                     </div>
-                                    <div class="col-xs-3 messages-date-container messages-date-container-right-align">
+                                    <div class="col-xs-4 dialogs-date-container messages-date-container-right-align">
                                         <span class="messages-date">
                                             <fmt:formatDate pattern="dd-MM-yyyy HH:mm" value="${message.timeSent}"/>
                                         </span>
+                                        <c:if test="${message.userTo.id == currentUser.id && not message.seen}">
+                                            <span class="label label-danger">New</span>
+                                        </c:if>
                                     </div>
                                 </div>
                             </a>

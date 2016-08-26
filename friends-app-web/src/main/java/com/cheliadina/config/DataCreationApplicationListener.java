@@ -74,12 +74,12 @@ public class DataCreationApplicationListener implements ApplicationListener<Cont
             postWithLikes.likeOrDislikePost(user4);
             postRepository.save(postWithLikes);
 
-            messageRepository.save(new Message("Hi", user1, user2));
-            messageRepository.save(new Message("Hello. How are you?", user2, user1));
-            messageRepository.save(new Message("Fine. And you?", user1, user2));
             messageRepository.save(new Message("Hello Max", user1, user3));
 
-
+            messageRepository.save(new Message("Hi", user1, user2, true));
+            messageRepository.save(new Message("Hello. How are you?", user2, user1, true));
+            messageRepository.save(new Message("Fine. And you?", user1, user2, true));
+            messageRepository.save(new Message("Good, thank you! What are your plans for weekend?", user2, user1));
         }
     }
 }
