@@ -64,4 +64,8 @@ public class MessageService {
         return dialogs;
     }
 
+    public boolean checkUnseenMessages(int currentUserId) {
+        return messageRepository.countByUserTo_IdAndSeen(currentUserId, false) > 0;
+    }
+
 }

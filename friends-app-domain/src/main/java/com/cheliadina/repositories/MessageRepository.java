@@ -14,4 +14,6 @@ public interface MessageRepository extends JpaRepository<Message, Integer> {
 
     List<Message> findByUserFrom_IdAndUserTo_Id(int userFromId, int userToId);
 
+    int countByUserTo_IdAndSeen(int userToId, boolean seen);
+
 }

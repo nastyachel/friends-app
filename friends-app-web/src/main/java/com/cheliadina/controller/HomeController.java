@@ -68,6 +68,7 @@ public class HomeController {
         modelAndView.addObject("user", user);
         modelAndView.addObject("postsReverse", postsReverse);
         modelAndView.addObject("currentUser", currentUser);
+        modelAndView.addObject("newMessages", messageService.checkUnseenMessages(currentUserId)); // TODO ajax?
         return modelAndView;
     }
 
@@ -145,16 +146,20 @@ public class HomeController {
             @RequestParam(name = "id", required = false) Integer userId,
             HttpSession httpSession) {
 
+        int currentUserId = getCurrentUserId(httpSession);
+        User currentUser = userService.getFullUser(currentUserId);
+        User user;
         if (userId == null) {
-            userId = getCurrentUserId(httpSession);
+            user = currentUser;
+        } else {
+            user = userService.getFullUser(userId);
         }
-        User user = userService.getFullUser(userId);
-        User currentUser = userService.getFullUser(getCurrentUserId(httpSession));
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("friends");
         modelAndView.addObject("user", user);
         modelAndView.addObject("currentUser", currentUser);
+        modelAndView.addObject("newMessages", messageService.checkUnseenMessages(currentUserId));
         return modelAndView;
     }
 
@@ -178,6 +183,7 @@ public class HomeController {
         modelAndView.addObject("type", FindFriendsViewType.DEFAULT);
         modelAndView.addObject("users", userService.findFriends(currentUserId));
         modelAndView.addObject("currentUser", currentUser);
+        modelAndView.addObject("newMessages", messageService.checkUnseenMessages(currentUserId));
         return modelAndView;
     }
 
@@ -192,6 +198,7 @@ public class HomeController {
         User user = userService.getFullUser(getCurrentUserId(httpSession));
         ModelAndView modelAndView = new ModelAndView("edit-profile");
         modelAndView.addObject("user", user);
+        modelAndView.addObject("newMessages", messageService.checkUnseenMessages(getCurrentUserId(httpSession)));
         return modelAndView;
     }
 
@@ -205,6 +212,7 @@ public class HomeController {
         modelAndView.addObject("hobbyTitle", hobbyTitle);
         modelAndView.addObject("users", hobbyService.findFriendsByHobby(hobbyTitle, currentUser));
         modelAndView.addObject("currentUser", currentUser);
+        modelAndView.addObject("newMessages", messageService.checkUnseenMessages(currentUserId));
         return modelAndView;
     }
 
@@ -232,6 +240,7 @@ public class HomeController {
         ModelAndView modelAndView = new ModelAndView("messages");
         modelAndView.addObject("messages", dialog);
         modelAndView.addObject("friend", userService.getUser(id));
+        modelAndView.addObject("newMessages", messageService.checkUnseenMessages(currentUserId));
         return modelAndView;
     }
 
@@ -256,6 +265,7 @@ public class HomeController {
         ModelAndView modelAndView = new ModelAndView("dialogs");
         modelAndView.addObject("currentUser", userService.getFullUser(currentUserId));
         modelAndView.addObject("dialogs", dialogs);
+        modelAndView.addObject("newMessages", messageService.checkUnseenMessages(currentUserId));
         return modelAndView;
     }
 
