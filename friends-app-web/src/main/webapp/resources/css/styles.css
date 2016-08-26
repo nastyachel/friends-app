@@ -34,6 +34,32 @@ h5 {
     min-height: 40px;
 }
 
+.message-panel {
+    margin-bottom: 8px;
+}
+
+.message-body {
+    padding: 6px 10px;
+}
+
+.message-sent {
+    background-color: #eee;
+}
+
+
+.messages-date-container {
+    padding-top: 5px;
+}
+
+.message-date-container-sent {
+    text-align: right;
+}
+
+.messages-date {
+    color: #aaa;
+    font-size: 14px;
+}
+
 textarea {
     resize: none;
 }

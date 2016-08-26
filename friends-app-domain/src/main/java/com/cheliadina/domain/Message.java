@@ -1,6 +1,7 @@
 package com.cheliadina.domain;
 
 import javax.persistence.*;
+import java.util.Comparator;
 import java.util.Date;
 
 /**
@@ -8,7 +9,7 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "MESSAGE")
-public class Message {
+public class Message implements Comparable<Message>{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,12 +23,23 @@ public class Message {
     private Date timeSent;
 
     @ManyToOne
-    @JoinColumn(name = "PERSON_FROM")
-    private User personFrom;
+    @JoinColumn(name = "USER_FROM_ID")
+    private User userFrom;
 
     @ManyToOne
-    @JoinColumn(name = "PERSON_TO")
-    private User personTo;
+    @JoinColumn(name = "USER_TO_ID")
+    private User userTo;
+
+    public Message(){
+        timeSent = new Date();
+    }
+
+    public Message(String content, User userFrom, User userTo){
+        this();
+        this.content = content;
+        this.userFrom = userFrom;
+        this.userTo = userTo;
+    }
 
     public int getId() {
         return id;
@@ -45,19 +57,32 @@ public class Message {
         this.content = content;
     }
 
-    public User getPersonFrom() {
-        return personFrom;
+    public User getUserFrom() {
+        return userFrom;
     }
 
-    public void setPersonFrom(User personFrom) {
-        this.personFrom = personFrom;
+    public void setUserFrom(User userFrom) {
+        this.userFrom = userFrom;
     }
 
-    public User getPersonTo() {
-        return personTo;
+    public User getUserTo() {
+        return userTo;
     }
 
-    public void setPersonTo(User personTo) {
-        this.personTo = personTo;
+    public void setUserTo(User userTo) {
+        this.userTo = userTo;
+    }
+
+    public Date getTimeSent() {
+        return timeSent;
+    }
+
+    public void setTimeSent(Date timeSent) {
+        this.timeSent = timeSent;
+    }
+
+    @Override
+    public int compareTo(Message otherMessage) {
+        return timeSent.compareTo(otherMessage.getTimeSent());
     }
 }

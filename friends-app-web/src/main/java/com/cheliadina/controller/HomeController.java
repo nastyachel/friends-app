@@ -1,10 +1,13 @@
 package com.cheliadina.controller;
 
+import com.cheliadina.domain.Message;
+import com.cheliadina.domain.Post;
 import com.cheliadina.domain.User;
 import com.cheliadina.filter.AuthorisationFilter;
 import com.cheliadina.model.AuthorisationData;
 import com.cheliadina.model.FindFriendsViewType;
 import com.cheliadina.service.HobbyService;
+import com.cheliadina.service.MessageService;
 import com.cheliadina.service.PostService;
 import com.cheliadina.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +18,8 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @author nastya
@@ -32,6 +37,9 @@ public class HomeController {
     @Autowired
     private HobbyService hobbyService;
 
+    @Autowired
+    private MessageService messageService;
+
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String getIndex() {
         return "redirect:/profile";
@@ -48,9 +56,14 @@ public class HomeController {
         else {
             user = userService.getFullUser(userId);
         }
+
+        List<Post> postsReverse = user.getPosts();
+        Collections.reverse(postsReverse);
+
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("profile");
         modelAndView.addObject("user", user);
+        modelAndView.addObject("postsReverse", postsReverse);
         modelAndView.addObject("currentUser", currentUser);
         return modelAndView;
     }
@@ -168,12 +181,34 @@ public class HomeController {
         hobbyService.deleteHobby(id, getCurrentUserId(httpSession));
         return "redirect:/edit-profile";
     }
+
     private int getCurrentUserId(HttpSession httpSession) {
         Integer userId = (Integer) httpSession.getAttribute(AuthorisationFilter.USER_ATTR);
         if (userId == null) {
             throw new RuntimeException("No user in the session");
         }
         return userId;
+    }
+
+    @RequestMapping(value = "/messages", method = RequestMethod.GET)
+    public ModelAndView getMessagesWithUser(@RequestParam int id, HttpSession httpSession){
+        int currentUserId = getCurrentUserId(httpSession);
+        if (id == currentUserId)
+        {
+            return new ModelAndView("redirect:/profile");
+        }
+        List<Message> dialog = messageService.getDialog(currentUserId, id);
+        ModelAndView modelAndView = new ModelAndView("messages");
+        modelAndView.addObject("messages", dialog);
+        modelAndView.addObject("friend", userService.getUser(id));
+        return modelAndView;
+    }
+
+    @RequestMapping(value = "/create-message", method = RequestMethod.POST)
+    public String createMessage(String content, HttpSession httpSession, HttpServletRequest request){
+        int friendId = Integer.parseInt(request.getParameter("id"));
+        messageService.createMessage(content, getCurrentUserId(httpSession), friendId);
+        return "redirect:/messages?id=" + friendId;
     }
 
 }

@@ -60,10 +60,10 @@
     <jsp:include page="_create-post.jsp"/>
 </c:if>
 
-<c:if test="${not empty user.posts}">
+<c:if test="${not empty postsReverse}">
     <div class="row">
         <div class="col-xs-12">
-        <c:forEach var = "post" items="${user.posts}">
+        <c:forEach var = "post" items="${postsReverse}">
             <div class = "panel panel-default">
                 <div class = "panel-heading">
                     <div class="row">

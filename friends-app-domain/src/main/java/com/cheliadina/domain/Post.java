@@ -8,7 +8,7 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "POST")
-public class Post {
+public class Post implements Comparable<Post> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -73,5 +73,10 @@ public class Post {
         result = 31 * result + (content != null ? content.hashCode() : 0);
         result = 31 * result + (timeCreated != null ? timeCreated.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public int compareTo(Post o) {
+        return timeCreated.compareTo(timeCreated);
     }
 }

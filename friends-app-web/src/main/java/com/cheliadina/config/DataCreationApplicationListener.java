@@ -1,18 +1,15 @@
 package com.cheliadina.config;
 
 import com.cheliadina.domain.Hobby;
+import com.cheliadina.domain.Message;
 import com.cheliadina.domain.Post;
 import com.cheliadina.domain.User;
+import com.cheliadina.repositories.MessageRepository;
 import com.cheliadina.repositories.UserRepository;
-import org.jboss.logging.annotations.Pos;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
-
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Date;
 
 /**
  * @author nastya
@@ -22,6 +19,9 @@ public class DataCreationApplicationListener implements ApplicationListener<Cont
 {
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private MessageRepository messageRepository;
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
@@ -47,9 +47,25 @@ public class DataCreationApplicationListener implements ApplicationListener<Cont
             user3.addHobby(new Hobby("hobby1"));
             user3.addFriend(user2);
             user3.addFriend(user1);
+
+            User user4 = new User();
+            user4.setFirstName("Jake");
+            user4.setLastName("Petersen");
+            user4.setUsername("jakejake");
+            user4.setPassword("123");
+            user4.setBirthday(1992, 2, 2);
+
             userRepository.save(user1);
             userRepository.save(user2);
             userRepository.save(user3);
+            userRepository.save(user4);
+
+            messageRepository.save(new Message("Hi", user1, user2));
+            messageRepository.save(new Message("Hello. How are you?", user2, user1));
+            messageRepository.save(new Message("Fine. And you?", user1, user2));
+            messageRepository.save(new Message("Hello Max", user1, user3));
+
+
         }
     }
 }
