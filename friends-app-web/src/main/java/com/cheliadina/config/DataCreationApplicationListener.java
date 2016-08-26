@@ -5,6 +5,7 @@ import com.cheliadina.domain.Message;
 import com.cheliadina.domain.Post;
 import com.cheliadina.domain.User;
 import com.cheliadina.repositories.MessageRepository;
+import com.cheliadina.repositories.PostRepository;
 import com.cheliadina.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
@@ -19,6 +20,9 @@ public class DataCreationApplicationListener implements ApplicationListener<Cont
 {
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private PostRepository postRepository;
 
     @Autowired
     private MessageRepository messageRepository;
@@ -44,7 +48,8 @@ public class DataCreationApplicationListener implements ApplicationListener<Cont
             user3.setUsername("maxmax");
             user3.setPassword("123");
             user3.setBirthday(1992, 1, 10);
-            user3.addPost(new Post("Hello world!"));
+            Post postWithLikes = new Post("Hello world!");
+            user3.addPost(postWithLikes);
             user3.addPost(new Post("What a wonderful day! :)"));
             user3.addHobby(new Hobby("hobby1"));
             user3.addHobby(new Hobby("hobby1"));
@@ -62,6 +67,12 @@ public class DataCreationApplicationListener implements ApplicationListener<Cont
             userRepository.save(user2);
             userRepository.save(user3);
             userRepository.save(user4);
+
+            postWithLikes.likeOrDislikePost(user1);
+            postWithLikes.likeOrDislikePost(user2);
+            postWithLikes.likeOrDislikePost(user3);
+            postWithLikes.likeOrDislikePost(user4);
+            postRepository.save(postWithLikes);
 
             messageRepository.save(new Message("Hi", user1, user2));
             messageRepository.save(new Message("Hello. How are you?", user2, user1));

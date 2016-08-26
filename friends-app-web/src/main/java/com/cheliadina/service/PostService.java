@@ -2,6 +2,7 @@ package com.cheliadina.service;
 
 import com.cheliadina.domain.Post;
 import com.cheliadina.domain.User;
+import com.cheliadina.repositories.PostRepository;
 import com.cheliadina.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,9 @@ public class PostService {
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    PostRepository postRepository;
 
     @Autowired
     UserService userService;
@@ -36,4 +40,12 @@ public class PostService {
         currentUser.removePost(postId);
         userRepository.save(currentUser);
     }
+
+    public void likePost(int postId, int userLikedId){
+        User userLiked = userRepository.findOne(userLikedId);
+        Post post = postRepository.findOne(postId);
+        post.likeOrDislikePost(userLiked);
+        postRepository.save(post);
+    }
+
 }

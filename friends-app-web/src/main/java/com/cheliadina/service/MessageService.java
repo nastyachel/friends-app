@@ -32,8 +32,8 @@ public class MessageService {
     }
 
     public void createMessage(String content, int currentUserId, int friendId){
-        User currentUser = userRepository.getOne(currentUserId);
-        User friend = userRepository.getOne(friendId);
+        User currentUser = userRepository.findOne(currentUserId);
+        User friend = userRepository.findOne(friendId);
         messageRepository.save(new Message(content, currentUser, friend));
     }
 }

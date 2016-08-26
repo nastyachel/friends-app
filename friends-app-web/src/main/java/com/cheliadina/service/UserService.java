@@ -65,7 +65,7 @@ public class UserService {
 
     public List<User> findFriends(int currentUserId){
         User currentUser = getUser(currentUserId);
-        List<User> notFriends = repository.findAll(); // todo add paging
+        List<User> notFriends = repository.findAll();
         notFriends.removeAll(currentUser.getFriends());
         notFriends.remove(currentUser);
         return notFriends;

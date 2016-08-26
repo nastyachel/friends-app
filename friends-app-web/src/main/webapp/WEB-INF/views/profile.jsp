@@ -3,6 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="my" tagdir="/WEB-INF/tags" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <jsp:include page="_head-with-menu.jsp">
     <jsp:param name="title" value="Profile"/>
@@ -86,6 +87,24 @@
 
                 <div class = "panel-body">
                     <pre>${post.content}</pre>
+                    <div class="row">
+                        <div class="col-xs-2">
+                            <c:set var="currentUserLikedPost" value="false" />
+                            <c:set var="usersLikedString" value="" />
+                            <c:forEach var="userLiked" items="${post.usersLiked}" varStatus="loop">
+                                <c:set var="usersLikedString"
+                                       value="${usersLikedString}${loop.first ? '' : ', '}${userLiked.firstName} ${userLiked.lastName}" />
+                                <c:if test="${userLiked.id == currentUser.id}">
+                                    <c:set var="currentUserLikedPost" value="true" />
+                                </c:if>
+                            </c:forEach>
+                            <a href="<c:url value='/like-post?postId=${post.id}&postOwnerId=${user.id}'/>"
+                               class="btn btn-block ${currentUserLikedPost ? 'btn-primary' : 'btn-default'}"
+                               title="${usersLikedString}">
+                                Like (${fn:length(post.usersLiked)})
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </c:forEach>

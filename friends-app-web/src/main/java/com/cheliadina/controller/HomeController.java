@@ -242,6 +242,12 @@ public class HomeController {
         return "redirect:/messages?id=" + friendId;
     }
 
+    @RequestMapping(value = "/like-post", method = RequestMethod.GET)
+    public String likePost(@RequestParam int postId, @RequestParam int postOwnerId, HttpSession httpSession) {
+        postService.likePost(postId, getCurrentUserId(httpSession));
+        return "redirect:/profile?id=" + postOwnerId;
+    }
+
     private void loginUser(User user, HttpSession httpSession) {
         httpSession.setAttribute(AuthorisationFilter.AUTH_ATTR, LocalDateTime.now());
         httpSession.setAttribute(AuthorisationFilter.USER_ATTR, user.getId());

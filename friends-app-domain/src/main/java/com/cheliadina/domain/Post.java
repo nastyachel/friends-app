@@ -1,7 +1,9 @@
 package com.cheliadina.domain;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author nastya
@@ -21,11 +23,15 @@ public class Post implements Comparable<Post> {
     @Column(name = "creation_time")
     private Date timeCreated;
 
-    public Post(){
+    @ManyToMany(fetch = FetchType.EAGER)
+    @Column
+    private List<User> usersLiked = new ArrayList<>();
+
+    public Post() {
         timeCreated = new Date();
     }
 
-    public Post(String content){
+    public Post(String content) {
         this();
         this.content = content;
     }
@@ -54,6 +60,10 @@ public class Post implements Comparable<Post> {
         this.timeCreated = timeCreated;
     }
 
+    public List<User> getUsersLiked() {
+        return usersLiked;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -79,4 +89,17 @@ public class Post implements Comparable<Post> {
     public int compareTo(Post o) {
         return timeCreated.compareTo(timeCreated);
     }
+
+    public void likeOrDislikePost(User userLiked) {
+        if (usersLiked.contains(userLiked)) {
+            usersLiked.remove(userLiked);
+        } else {
+            usersLiked.add(userLiked);
+        }
+    }
+
+    public void unlikePost(User userUnliked) {
+        usersLiked.remove(userUnliked);
+    }
+
 }
