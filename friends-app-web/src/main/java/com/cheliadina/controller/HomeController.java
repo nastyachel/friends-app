@@ -6,17 +6,21 @@ import com.cheliadina.domain.User;
 import com.cheliadina.filter.AuthorisationFilter;
 import com.cheliadina.model.AuthorisationData;
 import com.cheliadina.model.FindFriendsViewType;
+import com.cheliadina.model.RegistrationData;
 import com.cheliadina.service.HobbyService;
 import com.cheliadina.service.MessageService;
 import com.cheliadina.service.PostService;
 import com.cheliadina.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
@@ -52,8 +56,7 @@ public class HomeController {
         User user;
         if (userId == null) {
             user = currentUser;
-        }
-        else {
+        } else {
             user = userService.getFullUser(userId);
         }
 
@@ -66,6 +69,36 @@ public class HomeController {
         modelAndView.addObject("postsReverse", postsReverse);
         modelAndView.addObject("currentUser", currentUser);
         return modelAndView;
+    }
+
+    @RequestMapping(value = "/sign-up", method = RequestMethod.GET)
+    public String signUp() {
+        return "sign-up";
+    }
+
+
+    @RequestMapping(value = "/submit-sign-up", method = RequestMethod.POST)
+    public ModelAndView submitSignUp(
+            @Valid @ModelAttribute RegistrationData registrationData,
+            BindingResult bindingResult,
+            HttpSession httpSession) {
+
+        if (bindingResult.hasErrors()) {
+            ModelAndView modelAndView = new ModelAndView("sign-up");
+            modelAndView.addObject("errorMsg", "Some fields are not valid");
+            return modelAndView;
+        }
+
+        User newUser;
+        try {
+            newUser = userService.createNewUser(registrationData);
+        } catch (DataIntegrityViolationException e) {
+            ModelAndView modelAndView = new ModelAndView("sign-up");
+            modelAndView.addObject("errorMsg", "User with this username already exists");
+            return modelAndView;
+        }
+        loginUser(newUser, httpSession);
+        return new ModelAndView("redirect:/profile");
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
@@ -85,11 +118,10 @@ public class HomeController {
 
     @RequestMapping(value = "/submit-login", method = RequestMethod.POST)
     public String submitLogin(@ModelAttribute AuthorisationData authData,
-                              HttpSession session) {
+                              HttpSession httpSession) {
         User user = userService.getUserByUsernameAndPassword(authData.getUsername(), authData.getPassword());
         if (user != null) {
-            session.setAttribute(AuthorisationFilter.AUTH_ATTR, LocalDateTime.now());
-            session.setAttribute(AuthorisationFilter.USER_ATTR, user.getId());
+            loginUser(user, httpSession);
             return "redirect:/profile";
         }
         return "redirect:/login?error=true";
@@ -102,7 +134,7 @@ public class HomeController {
     }
 
     @RequestMapping(value = "/delete-friend", method = RequestMethod.GET)
-    public String removeFriendship( @RequestParam("friendId") int friendId, HttpSession httpSession) {
+    public String removeFriendship(@RequestParam("friendId") int friendId, HttpSession httpSession) {
         userService.removeFriendship(getCurrentUserId(httpSession), friendId);
         return "redirect:/profile?id=" + friendId;
 
@@ -150,13 +182,13 @@ public class HomeController {
     }
 
     @RequestMapping(value = "/create-hobby", method = RequestMethod.POST)
-    public String createHobby(String title, HttpSession httpSession){
+    public String createHobby(String title, HttpSession httpSession) {
         hobbyService.createHobby(title, getCurrentUserId(httpSession));
         return "redirect:/edit-profile";
     }
 
-    @RequestMapping(value="/edit-profile", method = RequestMethod.GET)
-    public ModelAndView editHobbies(HttpSession httpSession){
+    @RequestMapping(value = "/edit-profile", method = RequestMethod.GET)
+    public ModelAndView editHobbies(HttpSession httpSession) {
         User user = userService.getFullUser(getCurrentUserId(httpSession));
         ModelAndView modelAndView = new ModelAndView("edit-profile");
         modelAndView.addObject("user", user);
@@ -164,10 +196,10 @@ public class HomeController {
     }
 
     @RequestMapping(value = "/find-friends-by-hobby", method = RequestMethod.GET)
-    public ModelAndView findFriendsByHobby(@RequestParam int id, HttpSession httpSession){
+    public ModelAndView findFriendsByHobby(@RequestParam int id, HttpSession httpSession) {
         int currentUserId = getCurrentUserId(httpSession);
         User currentUser = userService.getFullUser(currentUserId);
-        String hobbyTitle  = hobbyService.getHobby(id).getTitle();
+        String hobbyTitle = hobbyService.getHobby(id).getTitle();
         ModelAndView modelAndView = new ModelAndView("find-friends");
         modelAndView.addObject("type", FindFriendsViewType.HOBBIES);
         modelAndView.addObject("hobbyTitle", hobbyTitle);
@@ -177,7 +209,7 @@ public class HomeController {
     }
 
     @RequestMapping(value = "/delete-hobby", method = RequestMethod.GET)
-    public String deleteHobby(@RequestParam int id, HttpSession httpSession){
+    public String deleteHobby(@RequestParam int id, HttpSession httpSession) {
         hobbyService.deleteHobby(id, getCurrentUserId(httpSession));
         return "redirect:/edit-profile";
     }
@@ -191,10 +223,9 @@ public class HomeController {
     }
 
     @RequestMapping(value = "/messages", method = RequestMethod.GET)
-    public ModelAndView getMessagesWithUser(@RequestParam int id, HttpSession httpSession){
+    public ModelAndView getMessagesWithUser(@RequestParam int id, HttpSession httpSession) {
         int currentUserId = getCurrentUserId(httpSession);
-        if (id == currentUserId)
-        {
+        if (id == currentUserId) {
             return new ModelAndView("redirect:/profile");
         }
         List<Message> dialog = messageService.getDialog(currentUserId, id);
@@ -205,10 +236,15 @@ public class HomeController {
     }
 
     @RequestMapping(value = "/create-message", method = RequestMethod.POST)
-    public String createMessage(String content, HttpSession httpSession, HttpServletRequest request){
+    public String createMessage(String content, HttpSession httpSession, HttpServletRequest request) {
         int friendId = Integer.parseInt(request.getParameter("id"));
         messageService.createMessage(content, getCurrentUserId(httpSession), friendId);
         return "redirect:/messages?id=" + friendId;
+    }
+
+    private void loginUser(User user, HttpSession httpSession) {
+        httpSession.setAttribute(AuthorisationFilter.AUTH_ATTR, LocalDateTime.now());
+        httpSession.setAttribute(AuthorisationFilter.USER_ATTR, user.getId());
     }
 
 }

@@ -1,6 +1,7 @@
 package com.cheliadina.service;
 
 import com.cheliadina.domain.User;
+import com.cheliadina.model.RegistrationData;
 import com.cheliadina.repositories.UserRepository;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,4 +70,15 @@ public class UserService {
         notFriends.remove(currentUser);
         return notFriends;
     }
+
+    public User createNewUser(RegistrationData registrationData){
+        User user = new User();
+        user.setUsername(registrationData.getUsername());
+        user.setPassword(registrationData.getPassword());
+        user.setFirstName(registrationData.getFirstName());
+        user.setLastName(registrationData.getLastName());
+        user.setBirthday(registrationData.getBirthday());
+        return repository.save(user);
+    }
+
 }

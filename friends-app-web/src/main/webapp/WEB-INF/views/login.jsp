@@ -37,4 +37,10 @@
     </div>
 </form>
 
+<div class="row">
+    <div class="col-xs-offset-2 col-xs-10">
+        <a class="btn btn-default btn-block" href="<c:url value='/sign-up'/>">Sign Up</a>
+    </div>
+</div>
+
 <jsp:include page="_foot.jsp"/>

@@ -44,7 +44,9 @@ public class AuthorisationFilter implements Filter {
 
     private boolean isLoginIntention(String uri) {
         return uri.equalsIgnoreCase("/login")
-                || uri.equalsIgnoreCase("/submit-login");
+                || uri.equalsIgnoreCase("/submit-login")
+                || uri.equalsIgnoreCase("/sign-up")
+                || uri.equalsIgnoreCase("/submit-sign-up");
     }
 
     @Override
