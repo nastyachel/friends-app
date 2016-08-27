@@ -68,4 +68,7 @@ public class MessageService {
         return messageRepository.countByUserTo_IdAndSeen(currentUserId, false) > 0;
     }
 
+    public void setMessageRepository(MessageRepository messageRepository) {
+        this.messageRepository = messageRepository;
+    }
 }

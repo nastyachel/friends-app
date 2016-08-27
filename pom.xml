@@ -22,6 +22,12 @@
         <org.hibernate-em-version>4.3.8.Final</org.hibernate-em-version>
         <org.springframework.data-version>1.10.2.RELEASE</org.springframework.data-version>
         <dbh2.version>1.4.192</dbh2.version>
+        <javaee.version>7.0</javaee.version>
+        <cglib.version>2.2.2</cglib.version>
+        <hibernate-validator.version>5.3.0.Alpha1</hibernate-validator.version>
+        <junit.version>4.12</junit.version>
+        <mockito-all.version>1.9.5</mockito-all.version>
+        <maven-compiler-plugin.version>2.3.2</maven-compiler-plugin.version>
     </properties>
 
     <dependencyManagement>
@@ -37,7 +43,7 @@
             <dependency>
                 <groupId>javax</groupId>
                 <artifactId>javaee-web-api</artifactId>
-                <version>7.0</version>
+                <version>${javaee.version}</version>
             </dependency>
 
             <!-- Spring Core -->
@@ -51,7 +57,7 @@
             <dependency>
                 <groupId>cglib</groupId>
                 <artifactId>cglib</artifactId>
-                <version>2.2.2</version>
+                <version>${cglib.version}</version>
             </dependency>
 
             <dependency>
@@ -100,7 +106,7 @@
             <dependency>
                 <groupId>org.hibernate</groupId>
                 <artifactId>hibernate-validator</artifactId>
-                <version>5.3.0.Alpha1</version>
+                <version>${hibernate-validator.version}</version>
             </dependency>
 
             <!-- H2 DB -->
@@ -108,6 +114,21 @@
                 <groupId>com.h2database</groupId>
                 <artifactId>h2</artifactId>
                 <version>${dbh2.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>${junit.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-all</artifactId>
+                <version>${mockito-all.version}</version>
+                <scope>test</scope>
+
             </dependency>
 
         </dependencies>
@@ -119,7 +140,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>2.3.2</version>
+                    <version>${maven-compiler-plugin.version}</version>
                     <configuration>
                         <source>${jdk.version}</source>
                         <target>${jdk.version}</target>
